@@ -19,7 +19,14 @@
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--sky) 0%, #e0f7fa 100%);
+            /* OUDE ACHTERGROND: background: linear-gradient(135deg, var(--sky) 0%, #e0f7fa 100%); */
+
+            /* NIEUWE ACHTERGROND: Afbeelding van Pake Jan en Oma Inge */
+            background-image: url('pake-inge-vakantie.jpg'); /* VERVANG DOOR DE JUISTE AFBEELDINGSPAD */
+            background-size: cover; /* Zorgt ervoor dat de afbeelding de hele achtergrond bedekt */
+            background-position: center; /* Centreert de afbeelding */
+            background-attachment: fixed; /* Zorgt ervoor dat de achtergrond vast blijft staan bij scrollen (optioneel) */
+            
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -28,7 +35,7 @@
             box-sizing: border-box;
         }
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.9); /* Witte achtergrond met 90% dekking, zodat de foto er nog doorheen schijnt */
             padding: 30px 25px;
             border-radius: 30px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
@@ -362,6 +369,7 @@
             new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
             document.querySelectorAll('#choices-container button').forEach(b => {
                 if (b.textContent === rightAnswer) b.classList.add('correct');
+                else b.style.opacity = '0.6'; // dim other incorrect answers
             });
         }
         document.getElementById('next-button').classList.remove('hidden');
