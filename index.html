@@ -1,404 +1,409 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pake Jan en Oma Inge op vakantie</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        :root {
-            --sun: #ffdd00;
-            --sky: #87CEEB;
-            --beach: #FFD700;
-            --green: #4CAF50;
-            --pink: #FF69B4;
-            --blue: #2196F3;
-            --orange: #FF9800;
-        }
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            /* OUDE ACHTERGROND: background: linear-gradient(135deg, var(--sky) 0%, #e0f7fa 100%); */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pake Jan en Oma Inge op vakantie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --sun: #ffdd00;
+            --sky: #87CEEB;
+            --beach: #FFD700;
+            --green: #4CAF50;
+            --pink: #FF69B4;
+            --blue: #2196F3;
+            --orange: #FF9800;
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            /* OUDE ACHTERGROND: background: linear-gradient(135deg, var(--sky) 0%, #e0f7fa 100%); */
 
-            /* NIEUWE ACHTERGROND: Afbeelding van Pake Jan en Oma Inge */
-            background-image: url('pake-inge-vakantie.jpg'); /* VERVANG DOOR DE JUISTE AFBEELDINGSPAD */
-            background-size: cover; /* Zorgt ervoor dat de afbeelding de hele achtergrond bedekt */
-            background-position: center; /* Centreert de afbeelding */
-            background-attachment: fixed; /* Zorgt ervoor dat de achtergrond vast blijft staan bij scrollen (optioneel) */
-            
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.9); /* Witte achtergrond met 90% dekking, zodat de foto er nog doorheen schijnt */
-            padding: 30px 25px;
-            border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            max-width: 620px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        h1 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 2.4em;
-            color: var(--orange);
-            margin: 0 0 15px 0;
-        }
-        h2 {
-            font-family: 'Fredoka One', cursive;
-            color: var(--blue);
-        }
-        .emoji-big { font-size: 3.5em; margin: 10px 0; }
+            /* NIEUWE ACHTERGROND: Afbeelding van Pake Jan en Oma Inge */
+            background-image: url('pake-inge-vakantie.jpg'); /* VERVANG DOOR DE JUISTE AFBEELDINGSPAD */
+            background-size: cover; /* Zorgt ervoor dat de afbeelding de hele achtergrond bedekt */
+            background-position: center; /* Centreert de afbeelding */
+            background-attachment: fixed; /* Zorgt ervoor dat de achtergrond vast blijft staan bij scrollen (optioneel) */
+            
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9); /* Witte achtergrond met 90% dekking, zodat de foto er nog doorheen schijnt */
+            padding: 30px 25px;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            max-width: 620px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.4em;
+            color: var(--orange);
+            margin: 0 0 15px 0;
+        }
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--blue);
+        }
+        .emoji-big { font-size: 3.5em; margin: 10px 0; }
 
-        .hidden { display: none; }
+        .hidden { display: none; }
 
-        /* Start-scherm */
-        #words-input {
-            font-size: 1.8em;
-            width: 90px;
-            padding: 12px;
-            text-align: center;
-            border: 4px solid var(--pink);
-            border-radius: 15px;
-            margin: 0 10px;
-        }
-        .big-button {
-            background: var(--pink);
-            color: white;
-            border: none;
-            padding: 18px 30px;
-            margin: 15px 8px;
-            border-radius: 50px;
-            font-size: 1.4em;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-        }
-        .big-button:hover { transform: scale(1.08); }
-        .big-button:active { transform: scale(0.98); }
+        /* Start-scherm */
+        #words-input {
+            font-size: 1.8em;
+            width: 90px;
+            padding: 12px;
+            text-align: center;
+            border: 4px solid var(--pink);
+            border-radius: 15px;
+            margin: 0 10px;
+        }
+        .big-button {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            margin: 15px 8px;
+            border-radius: 50px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        .big-button:hover { transform: scale(1.08); }
+        .big-button:active { transform: scale(0.98); }
 
-        /* Quiz-scherm */
-        #word-display {
-            font-family: 'Fredoka One', cursive;
-            font-size: 3.5em;
-            color: var(--orange);
-            margin: 20px 0;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        }
-        .speak-btn {
-            background: var(--green);
-            font-size: 1.5em;
-            padding: 16px 30px;
-        }
-        .choices button {
-            width: 100%;
-            padding: 18px;
-            margin: 12px 0;
-            font-size: 1.3em;
-            border-radius: 20px;
-            border: 4px solid var(--blue);
-            background: white;
-            color: var(--blue);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .choices button:hover { background: #e3f2fd; transform: translateY(-4px); }
-        .choices button.correct { background: var(--green) !important; color: white; border-color: var(--green); }
-        .choices button.incorrect { background: #f44336 !important; color: white; border-color: #f44336; }
+        /* Quiz-scherm */
+        #word-display {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.5em;
+            color: var(--orange);
+            margin: 20px 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+        .speak-btn {
+            background: var(--green);
+            font-size: 1.5em;
+            padding: 16px 30px;
+        }
+        .choices button {
+            width: 100%;
+            padding: 18px;
+            margin: 12px 0;
+            font-size: 1.3em;
+            border-radius: 20px;
+            border: 4px solid var(--blue);
+            background: white;
+            color: var(--blue);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .choices button:hover { background: #e3f2fd; transform: translateY(-4px); }
+        .choices button.correct { background: var(--green) !important; color: white; border-color: var(--green); }
+        .choices button.incorrect { background: #f44336 !important; color: white; border-color: #f44336; }
 
-        #feedback { font-size: 1.6em; font-weight: bold; margin: 20px 0; min-height: 50px; }
+        #feedback { font-size: 1.6em; font-weight: bold; margin: 20px 0; min-height: 50px; }
 
-        #progress-bar {
-            height: 20px;
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        #progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--green), var(--sun));
-            transition: width 0.6s ease;
-        }
+        #progress-bar {
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--green), var(--sun));
+            transition: width 0.6s ease;
+        }
 
-        /* Eindscherm */
-        .stars { font-size: 3em; letter-spacing: 10px; margin: 20px 0; }
-        .score-text { font-size: 2em; color: var(--orange); }
+        /* Eindscherm */
+        .stars { font-size: 3em; letter-spacing: 10px; margin: 20px 0; }
+        .score-text { font-size: 2em; color: var(--orange); }
 
-        /* Kleine extra animaties */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        .bounce { animation: bounce 0.6s; }
-    </style>
+        /* Kleine extra animaties */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .bounce { animation: bounce 0.6s; }
+    </style>
 </head>
 <body>
 
 <div id="setup-screen" class="container">
-    <h1>Pake Jan & Oma Inge op vakantie</h1>
-    <div class="emoji-big">✈️🌴☀️</div>
+    <h1>Pake Jan & Oma Inge op vakantie</h1>
+    <div class="emoji-big">✈️🌴☀️</div>
 
-    <p style="font-size:1.2em; margin-bottom:8px;">Welke kant wil je oefenen?</p>
-    <div style="margin-bottom:15px;">
-        <button class="big-button" id="mode-en-nl" style="background: var(--blue);">
-            Engels ➜ Nederlands
-        </button>
-        <button class="big-button" id="mode-nl-en" style="background: var(--green);">
-            Nederlands ➜ Engels
-        </button>
-    </div>
+    <p style="font-size:1.2em; margin-bottom:8px;">Welke kant wil je oefenen?</p>
+    <div style="margin-bottom:15px;">
+        <button class="big-button" id="mode-en-nl" style="background: var(--blue);">
+            Engels ➜ Nederlands
+        </button>
+        <button class="big-button" id="mode-nl-en" style="background: var(--green);">
+            Nederlands ➜ Engels
+        </button>
+    </div>
 
-    <p style="font-size:1.3em;">Hoeveel woorden wil je oefenen?</p>
-    <div style="margin:15px 0;">
-        <input type="number" id="words-input" min="1" placeholder="15" value="15">
-    </div>
-    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden!</p>
-    <button class="big-button" id="start-button">Start de quiz!</button>
+    <p style="font-size:1.3em;">Hoeveel woorden wil je oefenen?</p>
+    <div style="margin:15px 0;">
+        <input type="number" id="words-input" min="1" placeholder="15" value="15">
+    </div>
+    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden!</p>
+    <button class="big-button" id="start-button">Start de quiz!</button>
 </div>
 
 <div id="quiz-screen" class="container hidden">
-    <h2 id="quiz-title">Engelse vakantie-woorden</h2>
-    <div id="progress-bar"><div id="progress-fill"></div></div>
-    <div id="progress-info" style="font-size:1.1em; color:#555;">Vraag 1 van 15</div>
+    <h2 id="quiz-title">Engelse vakantie-woorden </h2>
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <div id="progress-info" style="font-size:1.1em; color:#555;">Vraag 1 van 15</div>
 
-    <div id="word-display">...</div>
-    <button id="speak-button" class="big-button speak-btn">Spreek uit</button>
+    <div id="word-display">...</div>
+    <button id="speak-button" class="big-button speak-btn">Spreek uit</button>
 
-    <div class="choices" id="choices-container"></div>
-    <div id="feedback"></div>
-    <button id="next-button" class="big-button hidden" style="background:var(--orange);">Volgende</button>
+    <div class="choices" id="choices-container"></div>
+    <div id="feedback"></div>
+    <button id="next-button" class="big-button hidden" style="background:var(--orange);">Volgende</button>
 </div>
 
 <div id="end-screen" class="container hidden">
-    <h1>Goed gedaan!</h1>
-    <div class="emoji-big">🎉🏆</div>
-    <div class="score-text" id="score-display"></div>
-    <div class="stars" id="stars"></div>
-    <button class="big-button" style="background:var(--pink);" id="restart-button">Nog een keer spelen!</button>
-    <button class="big-button" style="background:#999;"
-        onclick="document.getElementById('setup-screen').classList.remove('hidden'); document.getElementById('end-screen').classList.add('hidden');">
-        Ander aantal woorden kiezen
-    </button>
+    <h1>Goed gedaan!</h1>
+    <div class="emoji-big">🎉🏆</div>
+    <div class="score-text" id="score-display"></div>
+    <div class="stars" id="stars"></div>
+    <button class="big-button" style="background:var(--pink);" id="restart-button">Nog een keer spelen!</button>
+    <button class="big-button" style="background:#999;"
+        onclick="document.getElementById('setup-screen').classList.remove('hidden'); document.getElementById('end-screen').classList.add('hidden');">
+        Ander aantal woorden kiezen
+    </button>
 </div>
 
 <script>
-    // ------------------------------
-    // DATA – vervang allQuestions door jouw volledige lijst
-    // ------------------------------
-    const allQuestions = [
-        // Voorbeeldvragen – hier jouw grote lijst plakken
-        { en: "Suitcase", correctNl: "Koffer", othersNl: ["Tas", "Kast", "Doos"] },
-        { en: "Airport", correctNl: "Vliegveld", othersNl: ["Treinstation", "Busstation", "Haven"] },
-    ];
+    // ------------------------------
+    // DATA – vervang allQuestions door jouw volledige lijst
+    // ------------------------------
+    const allQuestions = [
+        // Voorbeeldvragen – hier jouw grote lijst plakken
+        { en: "Suitcase", correctNl: "Koffer", othersNl: ["Tas", "Kast", "Doos"] },
+        { en: "Airport", correctNl: "Vliegveld", othersNl: ["Treinstation", "Busstation", "Haven"] },
+    ];
 
-    const extraWords = [
-        { en: "Ice cream", correctNl: "IJsje", othersNl: ["Koekje", "Taart", "Chips"] },
-        { en: "Sun cream", correctNl: "Zonnecrème", othersNl: ["Tandpasta", "Shampoo", "Deodorant"] },
-        { en: "Swimming pool", correctNl: "Zwembad", othersNl: ["Meer", "Zee", "Rivieroever"] },
-        { en: "Beach ball", correctNl: "Strandbal", othersNl: ["Voetbal", "Tennisbal", "Basketbal"] },
-        { en: "Flip-flops", correctNl: "Slippers", othersNl: ["Schoenen", "Sokken", "Laarzen"] },
-        { en: "Sunglasses", correctNl: "Zonnebril", othersNl: ["Leesbril", "Skibril", "Zwembril"] },
-        { en: "Sandcastle", correctNl: "Zandkasteel", othersNl: ["Sneeuwman", "Lego-huis", "Tent"] },
-        { en: "Holiday", correctNl: "Vakantie", othersNl: ["School", "Werk", "Weekend"] },
-        { en: "Fun", correctNl: "Leuk", othersNl: ["Saai", "Moeilijk", "Vies"] },
-        { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] }
-    ];
+    const extraWords = [
+        { en: "Ice cream", correctNl: "IJsje", othersNl: ["Koekje", "Taart", "Chips"] },
+        { en: "Sun cream", correctNl: "Zonnecrème", othersNl: ["Tandpasta", "Shampoo", "Deodorant"] },
+        { en: "Swimming pool", correctNl: "Zwembad", othersNl: ["Meer", "Zee", "Rivieroever"] },
+        { en: "Beach ball", correctNl: "Strandbal", othersNl: ["Voetbal", "Tennisbal", "Basketbal"] },
+        { en: "Flip-flops", correctNl: "Slippers", othersNl: ["Schoenen", "Sokken", "Laarzen"] },
+        { en: "Sunglasses", correctNl: "Zonnebril", othersNl: ["Leesbril", "Skibril", "Zwembril"] },
+        { en: "Sandcastle", correctNl: "Zandkasteel", othersNl: ["Sneeuwman", "Lego-huis", "Tent"] },
+        { en: "Holiday", correctNl: "Vakantie", othersNl: ["School", "Werk", "Weekend"] },
+        { en: "Fun", correctNl: "Leuk", othersNl: ["Saai", "Moeilijk", "Vies"] },
+        { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] }
+    ];
 
-    const allQuestionsFinal = [...allQuestions, ...extraWords];
+    const allQuestionsFinal = [...allQuestions, ...extraWords];
 
-    // ------------------------------
-    // STATE & DOM
-    // ------------------------------
-    const screens = {
-        setup: document.getElementById('setup-screen'),
-        quiz: document.getElementById('quiz-screen'),
-        end: document.getElementById('end-screen')
-    };
+    // ------------------------------
+    // STATE & DOM
+    // ------------------------------
+    const screens = {
+        setup: document.getElementById('setup-screen'),
+        quiz: document.getElementById('quiz-screen'),
+        end: document.getElementById('end-screen')
+    };
 
-    let total = 15, current = 0, score = 0, subset = [];
-    // mode: "EN_NL" = Engels -> Nederlands; "NL_EN" = Nederlands -> Engels
-    let mode = "EN_NL";
+    let total = 15, current = 0, score = 0, subset = [];
+    // mode: "EN_NL" = Engels -> Nederlands; "NL_EN" = Nederlands -> Engels
+    let mode = "EN_NL";
 
-    const modeEnNlBtn = document.getElementById('mode-en-nl');
-    const modeNlEnBtn = document.getElementById('mode-nl-en');
-    const speakButton = document.getElementById('speak-button');
-    const quizTitle = document.getElementById('quiz-title');
+    const modeEnNlBtn = document.getElementById('mode-en-nl');
+    const modeNlEnBtn = document.getElementById('mode-nl-en');
+    const speakButton = document.getElementById('speak-button');
+    const quizTitle = document.getElementById('quiz-title');
 
-    // Modus kiezen
-    modeEnNlBtn.onclick = () => {
-        mode = "EN_NL";
-        modeEnNlBtn.style.outline = "4px solid #000";
-        modeNlEnBtn.style.outline = "none";
-    };
-    modeNlEnBtn.onclick = () => {
-        mode = "NL_EN";
-        modeNlEnBtn.style.outline = "4px solid #000";
-        modeEnNlBtn.style.outline = "none";
-    };
+    // Modus kiezen
+    modeEnNlBtn.onclick = () => {
+        mode = "EN_NL";
+        modeEnNlBtn.style.outline = "4px solid #000";
+        modeNlEnBtn.style.outline = "none";
+    };
+    modeNlEnBtn.onclick = () => {
+        mode = "NL_EN";
+        modeNlEnBtn.style.outline = "4px solid #000";
+        modeEnNlBtn.style.outline = "none";
+    };
 
-    // Start-knop
-    document.getElementById('start-button').onclick = () => {
-        let input = document.getElementById('words-input').value.trim();
-        total = (input === '' || input === '0') ? allQuestionsFinal.length : parseInt(input) || 15;
-        if (total > allQuestionsFinal.length) total = allQuestionsFinal.length;
+    // Start-knop
+    document.getElementById('start-button').onclick = () => {
+        let input = document.getElementById('words-input').value.trim();
+        total = (input === '' || input === '0') ? allQuestionsFinal.length : parseInt(input) || 15;
+        if (total > allQuestionsFinal.length) total = allQuestionsFinal.length;
 
-        score = 0; current = 0;
-        subset = [...allQuestionsFinal];
-        shuffleArray(subset);
-        subset = subset.slice(0, total);
+        score = 0; current = 0;
+        subset = [...allQuestionsFinal];
+        shuffleArray(subset);
+        subset = subset.slice(0, total);
 
-        // Titel en spreek-knop afhankelijk van modus
-        if (mode === "EN_NL") {
-            quizTitle.textContent = "Engels ➜ Nederlands";
-            speakButton.classList.remove('hidden');
-        } else {
-            quizTitle.textContent = "Nederlands ➜ Engels";
-            speakButton.classList.add('hidden'); // geen uitspraak in NL -> EN modus
-        }
+        // Titel en spreek-knop afhankelijk van modus
+        if (mode === "EN_NL") {
+            quizTitle.textContent = "Engels ➜ Nederlands";
+            speakButton.classList.remove('hidden');
+        } else {
+            quizTitle.textContent = "Nederlands ➜ Engels";
+            speakButton.classList.add('hidden'); // geen uitspraak in NL -> EN modus
+        }
 
-        screens.setup.classList.add('hidden');
-        screens.quiz.classList.remove('hidden');
-        nextQuestion();
-    };
+        screens.setup.classList.add('hidden');
+        screens.quiz.classList.remove('hidden');
+        nextQuestion();
+    };
 
-    function shuffleArray(a) {
-        for (let i = a.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [a[i], a[j]] = [a[j], a[i]];
-        }
-    }
+    function shuffleArray(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+    }
 
-    function updateProgress() {
-        document.getElementById('progress-info').textContent = `Vraag ${current + 1} van ${total}`;
-        document.getElementById('progress-fill').style.width = `${((current + 1) / total) * 100}%`;
-    }
+    function updateProgress() {
+        document.getElementById('progress-info').textContent = `Vraag ${current + 1} van ${total}`;
+        document.getElementById('progress-fill').style.width = `${((current + 1) / total) * 100}%`;
+    }
 
-    function nextQuestion() {
-        if (current >= total) { endQuiz(); return; }
+    function nextQuestion() {
+        if (current >= total) { endQuiz(); return; }
 
-        updateProgress();
-        const q = subset[current];
-        document.getElementById('feedback').textContent = '';
-        document.getElementById('next-button').classList.add('hidden');
+        updateProgress();
+        const q = subset[current];
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-button').classList.add('hidden');
 
-        const container = document.getElementById('choices-container');
-        container.innerHTML = '';
+        const container = document.getElementById('choices-container');
+        container.innerHTML = '';
 
-        if (mode === "EN_NL") {
-            // Engels woord tonen, NL als opties
-            document.getElementById('word-display').textContent = q.en;
-            const answers = [q.correctNl, ...q.othersNl];
-            shuffleArray(answers);
+        if (mode === "EN_NL") {
+            // Engels woord tonen, NL als opties
+            document.getElementById('word-display').textContent = q.en;
+            const answers = [q.correctNl, ...q.othersNl];
+            // <<< WIZIGING 1: Zorg ervoor dat de NL-opties altijd geschud worden >>>
+            shuffleArray(answers);
+            // <<< EINDE WIZIGING 1 >>>
 
-            answers.forEach(ans => {
-                const btn = document.createElement('button');
-                btn.textContent = ans;
-                btn.onclick = () => selectAnswer(btn, ans === q.correctNl, q.correctNl);
-                container.appendChild(btn);
-            });
+            answers.forEach(ans => {
+                const btn = document.createElement('button');
+                btn.textContent = ans;
+                btn.onclick = () => selectAnswer(btn, ans === q.correctNl, q.correctNl);
+                container.appendChild(btn);
+            });
 
-            // automatisch uitspreken
-            speak(q.en);
+            // automatisch uitspreken
+            speak(q.en);
 
-        } else {
-            // Nederlands woord tonen, Engelse opties (4 opties)
-            document.getElementById('word-display').textContent = q.correctNl;
+        } else {
+            // Nederlands woord tonen, Engelse opties (4 opties)
+            document.getElementById('word-display').textContent = q.correctNl;
 
-            // 3 andere Engelse woorden zoeken als afleiders
-            const distractors = [];
-            const pool = allQuestionsFinal.filter(x => x.en !== q.en);
-            shuffleArray(pool);
-            for (let i = 0; i < pool.length && distractors.length < 3; i++) {
-                // voorkomen dat hetzelfde NL-woord terugkomt (optioneel)
-                if (pool[i].correctNl !== q.correctNl) {
-                    distractors.push(pool[i].en);
-                }
-            }
+            // 3 andere Engelse woorden zoeken als afleiders
+            const distractors = [];
+            const pool = allQuestionsFinal.filter(x => x.en !== q.en);
+            shuffleArray(pool);
+            for (let i = 0; i < pool.length && distractors.length < 3; i++) {
+                // voorkomen dat hetzelfde NL-woord terugkomt (optioneel)
+                if (pool[i].correctNl !== q.correctNl) {
+                    distractors.push(pool[i].en);
+                }
+            }
 
-            const answersEn = [q.en, ...distractors].slice(0, 4); // zeker max 4
-            shuffleArray(answersEn);
+            let answersEn = [q.en, ...distractors].slice(0, 4); // zeker max 4
+            
+            // <<< WIZIGING 2: Zorg ervoor dat de EN-opties nu geschud worden >>>
+            shuffleArray(answersEn);
+            // <<< EINDE WIZIGING 2 >>>
 
-            answersEn.forEach(ans => {
-                const btn = document.createElement('button');
-                btn.textContent = ans;
-                btn.onclick = () => selectAnswer(btn, ans === q.en, q.en);
-                container.appendChild(btn);
-            });
-        }
-    }
+            answersEn.forEach(ans => {
+                const btn = document.createElement('button');
+                btn.textContent = ans;
+                btn.onclick = () => selectAnswer(btn, ans === q.en, q.en);
+                container.appendChild(btn);
+            });
+        }
+    }
 
-    function speak(text) {
-        if (mode !== "EN_NL") return; // geen uitspraak in NL -> EN
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'en-GB';
-            utter.rate = 0.8;
-            utter.pitch = 1.1;
-            window.speechSynthesis.speak(utter);
-        }
-    }
+    function speak(text) {
+        if (mode !== "EN_NL") return; // geen uitspraak in NL -> EN
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-GB';
+            utter.rate = 0.8;
+            utter.pitch = 1.1;
+            window.speechSynthesis.speak(utter);
+        }
+    }
 
-    speakButton.onclick = () => {
-        if (mode === "EN_NL") {
-            speak(subset[current].en);
-        }
-    };
+    speakButton.onclick = () => {
+        if (mode === "EN_NL") {
+            speak(subset[current].en);
+        }
+    };
 
-    function selectAnswer(btn, correct, rightAnswer) {
-        document.querySelectorAll('#choices-container button').forEach(b => b.disabled = true);
+    function selectAnswer(btn, correct, rightAnswer) {
+        document.querySelectorAll('#choices-container button').forEach(b => b.disabled = true);
 
-        if (correct) {
-            score++;
-            btn.classList.add('correct');
-            document.getElementById('feedback').innerHTML = 'Super! Goed zo!';
-            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
-        } else {
-            btn.classList.add('incorrect');
-            document.getElementById('feedback').innerHTML = `Bijna! Het was: <strong>${rightAnswer}</strong>`;
-            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
-            document.querySelectorAll('#choices-container button').forEach(b => {
-                if (b.textContent === rightAnswer) b.classList.add('correct');
-                else b.style.opacity = '0.6'; // dim other incorrect answers
-            });
-        }
-        document.getElementById('next-button').classList.remove('hidden');
-    }
+        if (correct) {
+            score++;
+            btn.classList.add('correct');
+            document.getElementById('feedback').innerHTML = 'Super! Goed zo!';
+            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
+        } else {
+            btn.classList.add('incorrect');
+            document.getElementById('feedback').innerHTML = `Bijna! Het was: <strong>${rightAnswer}</strong>`;
+            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
+            document.querySelectorAll('#choices-container button').forEach(b => {
+                if (b.textContent === rightAnswer) b.classList.add('correct');
+                else b.style.opacity = '0.6'; // dim other incorrect answers
+            });
+        }
+        document.getElementById('next-button').classList.remove('hidden');
+    }
 
-    document.getElementById('next-button').onclick = () => {
-        current++;
-        nextQuestion();
-    };
+    document.getElementById('next-button').onclick = () => {
+        current++;
+        nextQuestion();
+    };
 
-    function endQuiz() {
-        screens.quiz.classList.add('hidden');
-        screens.end.classList.remove('hidden');
+    function endQuiz() {
+        screens.quiz.classList.add('hidden');
+        screens.end.classList.remove('hidden');
 
-        const percent = Math.round((score / total) * 100);
-        document.getElementById('score-display').textContent =
-            `Jullie hadden ${score} van de ${total} goed! (${percent}%)`;
+        const percent = Math.round((score / total) * 100);
+        document.getElementById('score-display').textContent =
+            `Jullie hadden ${score} van de ${total} goed! (${percent}%)`;
 
-        let stars = '';
-        for (let i = 0; i < 5; i++) stars += (i < Math.round(score / total * 5)) ? '⭐' : '☆';
-        document.getElementById('stars').textContent = stars;
+        let stars = '';
+        for (let i = 0; i < 5; i++) stars += (i < Math.round(score / total * 5)) ? '⭐' : '☆';
+        document.getElementById('stars').textContent = stars;
 
-        if (percent >= 90) confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
-    }
+        if (percent >= 90) confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+    }
 
-    document.getElementById('restart-button').onclick = () => {
-        screens.end.classList.add('hidden');
-        screens.setup.classList.remove('hidden');
-    };
+    document.getElementById('restart-button').onclick = () => {
+        screens.end.classList.add('hidden');
+        screens.setup.classList.remove('hidden');
+    };
 </script>
 </body>
 </html>
