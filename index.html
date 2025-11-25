@@ -281,18 +281,6 @@
             line-height: 1.4;
         }
 
-        /* Word count badge */
-        .word-count-badge {
-            background: linear-gradient(135deg, var(--palm), #27AE60);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
-            margin: 10px 0;
-            font-size: 1.1em;
-        }
-
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
@@ -440,6 +428,18 @@
         strong {
             color: var(--coral);
         }
+        
+        .word-count-display {
+            background: linear-gradient(135deg, var(--sun), var(--sunset));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -462,7 +462,11 @@
     <div style="margin:15px 0;">
         <input type="number" id="words-input" min="1" placeholder="15" value="15">
     </div>
-    <div class="word-count-badge">📚 Totaal: <span id="total-words">0</span> woorden beschikbaar!</div>
+    
+    <div class="word-count-display">
+        📚 Totaal beschikbaar: <span id="total-words">0</span> woorden!
+    </div>
+    
     <p>Laat leeg of vul 0 in voor <b>alle</b> woorden!</p>
     <button class="big-button" id="start-button">Start de quiz!</button>
 </div>
@@ -494,14 +498,12 @@
 
 <script>
     // ------------------------------
-    // DATA – De uitgebreide woordenlijst
+    // DATA – Alle woorden in één array
     // ------------------------------
-    const allQuestions = [
+    const allQuestionsFinal = [
+        // Basis woorden
         { en: "Suitcase", correctNl: "Koffer", othersNl: ["Tas", "Kast", "Doos"] },
-        { en: "Airport", correctNl: "Vliegveld", othersNl: ["Treinstation", "Busstation", "Haven"] }
-    ];
-
-    const extraWords = [
+        { en: "Airport", correctNl: "Vliegveld", othersNl: ["Treinstation", "Busstation", "Haven"] },
         { en: "Ice cream", correctNl: "IJsje", othersNl: ["Koekje", "Taart", "Chips"] },
         { en: "Sun cream", correctNl: "Zonnecrème", othersNl: ["Tandpasta", "Shampoo", "Deodorant"] },
         { en: "Swimming pool", correctNl: "Zwembad", othersNl: ["Meer", "Zee", "Rivieroever"] },
@@ -511,10 +513,7 @@
         { en: "Sandcastle", correctNl: "Zandkasteel", othersNl: ["Sneeuwman", "Lego-huis", "Tent"] },
         { en: "Holiday", correctNl: "Vakantie", othersNl: ["School", "Werk", "Weekend"] },
         { en: "Fun", correctNl: "Leuk", othersNl: ["Saai", "Moeilijk", "Vies"] },
-        { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] }
-    ];
-
-    const moreExtraWords = [
+        { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] },
         { en: "Passport", correctNl: "Paspoort", othersNl: ["Kaart", "Boek", "Rijbewijs"] },
         { en: "Ticket", correctNl: "Ticket", othersNl: ["Bon", "Geld", "Adres"] },
         { en: "Airplane", correctNl: "Vliegtuig", othersNl: ["Auto", "Bus", "Boot"] },
@@ -723,16 +722,10 @@
         { en: "Help", correctNl: "Hulp", othersNl: ["Service", "Steun", "Informatie"] }
     ];
 
-    // Combineer alle woorden
-    const allQuestionsFinal = [...allQuestions, ...extraWords, ...moreExtraWords];
-
-    // Toon totaal aantal woorden wanneer pagina laadt
+    // Toon totaal aantal woorden bij laden van de pagina
     document.addEventListener('DOMContentLoaded', function() {
-        const totalElement = document.getElementById('total-words');
-        if (totalElement) {
-            totalElement.textContent = allQuestionsFinal.length;
-        }
-        console.log('Totaal aantal woorden:', allQuestionsFinal.length);
+        document.getElementById('total-words').textContent = allQuestionsFinal.length;
+        console.log('Totaal aantal woorden in de quiz:', allQuestionsFinal.length);
     });
 
     // ------------------------------
@@ -752,6 +745,9 @@
     const speakButton = document.getElementById('speak-button');
     const quizTitle = document.getElementById('quiz-title');
 
+    // Standaard Engels -> Nederlands geselecteerd
+    modeEnNlBtn.style.outline = "4px solid #000";
+
     // Modus kiezen
     modeEnNlBtn.onclick = () => {
         mode = "EN_NL";
@@ -769,8 +765,10 @@
         let input = document.getElementById('words-input').value.trim();
         total = (input === '' || input === '0') ? allQuestionsFinal.length : parseInt(input) || 15;
         if (total > allQuestionsFinal.length) total = allQuestionsFinal.length;
+        if (total < 1) total = 1;
 
-        score = 0; current = 0;
+        score = 0; 
+        current = 0;
         subset = [...allQuestionsFinal];
         shuffleArray(subset);
         subset = subset.slice(0, total);
@@ -801,7 +799,10 @@
     }
 
     function nextQuestion() {
-        if (current >= total) { endQuiz(); return; }
+        if (current >= total) { 
+            endQuiz(); 
+            return; 
+        }
 
         updateProgress();
         const q = subset[current];
@@ -862,7 +863,7 @@
     }
 
     speakButton.onclick = () => {
-        if (mode === "EN_NL") {
+        if (mode === "EN_NL" && subset[current]) {
             speak(subset[current].en);
         }
     };
@@ -874,7 +875,9 @@
             score++;
             btn.classList.add('correct');
             document.getElementById('feedback').innerHTML = 'Super! Goed zo! 🎉';
-            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
+            try {
+                new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
+            } catch(e) {}
 
             setTimeout(() => {
                 current++;
@@ -884,7 +887,10 @@
         } else {
             btn.classList.add('incorrect');
             document.getElementById('feedback').innerHTML = `Bijna! Het was: <strong>${rightAnswer}</strong> 😢`;
-            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
+            try {
+                new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
+            } catch(e) {}
+            
             document.querySelectorAll('#choices-container button').forEach(b => {
                 if (b.textContent === rightAnswer) b.classList.add('correct');
                 else b.style.opacity = '0.6';
@@ -911,7 +917,11 @@
         for (let i = 0; i < 5; i++) stars += (i < Math.round(score / total * 5)) ? '⭐' : '☆';
         document.getElementById('stars').textContent = stars;
 
-        if (percent >= 90) confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+        if (percent >= 90) {
+            try {
+                confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+            } catch(e) {}
+        }
     }
 
     document.getElementById('restart-button').onclick = () => {
