@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pake Jan en Oma Inge op vakantie</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -162,7 +162,7 @@
     <div style="margin:15px 0;">
         <input type="number" id="words-input" min="1" placeholder="15" value="15">
     </div>
-    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden!</p>
+    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden! (Nu ${allQuestionsFinal.length} stuks)</p>
     <button class="big-button" id="start-button">Start de quiz!</button>
 </div>
 
@@ -193,9 +193,45 @@
 
 <script>
     // ------------------------------
-    // DATA – vervang allQuestions door jouw volledige lijst
+    // DATA – Dit is de complete woordenlijst
     // ------------------------------
     const allQuestions = [
-        // Voorbeeldvragen – hier jouw grote lijst plakken
         { en: "Suitcase", correctNl: "Koffer", othersNl: ["Tas", "Kast", "Doos"] },
-        { en: "Airport", correctNl:
+        { en: "Airport", correctNl: "Vliegveld", othersNl: ["Treinstation", "Busstation", "Haven"] },
+    ];
+
+    const extraWords = [
+        { en: "Ice cream", correctNl: "IJsje", othersNl: ["Koekje", "Taart", "Chips"] },
+        { en: "Sun cream", correctNl: "Zonnecrème", othersNl: ["Tandpasta", "Shampoo", "Deodorant"] },
+        { en: "Swimming pool", correctNl: "Zwembad", othersNl: ["Meer", "Zee", "Rivieroever"] },
+        { en: "Beach ball", correctNl: "Strandbal", othersNl: ["Voetbal", "Tennisbal", "Basketbal"] },
+        { en: "Flip-flops", correctNl: "Slippers", othersNl: ["Schoenen", "Sokken", "Laarzen"] },
+        { en: "Sunglasses", correctNl: "Zonnebril", othersNl: ["Leesbril", "Skibril", "Zwembril"] },
+        { en: "Sandcastle", correctNl: "Zandkasteel", othersNl: ["Sneeuwman", "Lego-huis", "Tent"] },
+        { en: "Holiday", correctNl: "Vakantie", othersNl: ["School", "Werk", "Weekend"] },
+        { en: "Fun", correctNl: "Leuk", othersNl: ["Saai", "Moeilijk", "Vies"] },
+        { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] }
+    ];
+
+    // === DE 100 EXTRA WOORDEN ZIJN HIERONDER TOEGEVOEGD ===
+    const moreExtraWords = [
+        { en: "Passport", correctNl: "Paspoort", othersNl: ["Kaart", "Boek", "Rijbewijs"] },
+        { en: "Ticket", correctNl: "Ticket", othersNl: ["Bon", "Geld", "Adres"] },
+        { en: "Airplane", correctNl: "Vliegtuig", othersNl: ["Auto", "Bus", "Boot"] },
+        { en: "Hotel", correctNl: "Hotel", othersNl: ["Winkel", "School", "Kantoor"] },
+        { en: "Booking", correctNl: "Boeking", othersNl: ["Plank", "Kist", "Recept"] },
+        { en: "Map", correctNl: "Kaart", othersNl: ["Telefoon", "Sleutel", "Boek"] },
+        { en: "Currency", correctNl: "Valuta", othersNl: ["Koffie", "Zeep", "Muziek"] },
+        { en: "Souvenir", correctNl: "Souvenir", othersNl: ["Krant", "Stoel", "Gereedschap"] },
+        { en: "Reservation", correctNl: "Reservering", othersNl: ["Boodschap", "Vraag", "Antwoord"] },
+        { en: "Check-in", correctNl: "Inchecken", othersNl: ["Uitchecken", "Zwemmen", "Eten"] },
+        { en: "Baggage claim", correctNl: "Bagageband", othersNl: ["Parkeerplaats", "Winkel", "Douane"] },
+        { en: "Gate", correctNl: "Gate", othersNl: ["Poort", "Hal", "Trap"] },
+        { en: "Window seat", correctNl: "Raamplaats", othersNl: ["Gangpad", "Tafel", "Stoel"] },
+        { en: "Aisle seat", correctNl: "Gangpadplaats", othersNl: ["Raam", "Balkon", "Deur"] },
+        { en: "Take off", correctNl: "Opstijgen", othersNl: ["Landen", "Rennen", "Slapen"] },
+        { en: "Landing", correctNl: "Landen", othersNl: ["Vliegen", "Springen", "Zitten"] },
+        { en: "Captain", correctNl: "Gezagvoerder", othersNl: ["Kok", "Ober", "Gids"] },
+        { en: "Flight attendant", correctNl: "Stewardess", othersNl: ["Piloot", "Passagier", "Reiziger"] },
+        { en: "Delayed", correctNl: "Vertraagd", othersNl: ["Op Tijd", "Snel", "Vroeg"] },
+        { en: "Lost and found", correctNl: "Gevonden voorwerpen", othersNl: ["Kassa", "Toilet
