@@ -23,7 +23,6 @@
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            /* VERVANG DEZE URL DOOR JULLIE GITHUB IMAGE URL */
             background-image: url('https://raw.githubusercontent.com/marceleenenaam-hue/Pake-en-oma-leren-Engels/main/images/pake-inge-vakantie.jpg');
             background-size: cover;
             background-position: center;
@@ -37,7 +36,6 @@
             position: relative;
         }
         
-        /* Overlay voor betere leesbaarheid */
         body::before {
             content: '';
             position: fixed;
@@ -66,7 +64,6 @@
             border: 3px solid rgba(255, 215, 0, 0.5);
         }
         
-        /* Decoratieve elementen */
         .container::before {
             content: '🌴';
             position: absolute;
@@ -114,7 +111,6 @@
 
         .hidden { display: none; }
 
-        /* Start-scherm */
         #words-input {
             font-size: 1.8em;
             width: 100px;
@@ -163,7 +159,6 @@
             transform: translateY(-1px) scale(1.02); 
         }
 
-        /* Mode buttons */
         #mode-en-nl, #mode-nl-en {
             background: linear-gradient(135deg, var(--ocean), #357ABD);
             position: relative;
@@ -173,7 +168,6 @@
             background: linear-gradient(135deg, var(--palm), #27AE60);
         }
 
-        /* Quiz-scherm */
         #word-display {
             font-family: 'Fredoka One', cursive;
             font-size: 3.2em;
@@ -272,7 +266,6 @@
             margin-bottom: 15px;
         }
 
-        /* Eindscherm */
         .stars { 
             font-size: 3.5em;
             letter-spacing: 12px;
@@ -288,7 +281,6 @@
             line-height: 1.4;
         }
 
-        /* Animaties */
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
@@ -305,7 +297,6 @@
             animation: float 3s ease-in-out infinite;
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             body {
                 padding: 10px 5px;
@@ -429,7 +420,6 @@
             }
         }
         
-        /* Extra visuele details */
         p {
             line-height: 1.6;
             color: #333;
@@ -437,6 +427,18 @@
         
         strong {
             color: var(--coral);
+        }
+        
+        .word-count-display {
+            background: linear-gradient(135deg, var(--sun), var(--sunset));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -460,7 +462,12 @@
     <div style="margin:15px 0;">
         <input type="number" id="words-input" min="1" placeholder="15" value="15">
     </div>
-    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden! (Nu <span id="total-words"></span> stuks)</p>
+    
+    <div class="word-count-display">
+        📚 Totaal beschikbaar: <span id="total-words">0</span> woorden!
+    </div>
+    
+    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden!</p>
     <button class="big-button" id="start-button">Start de quiz!</button>
 </div>
 
@@ -491,240 +498,235 @@
 
 <script>
     // ------------------------------
-    // DATA – De uitgebreide woordenlijst
+    // DATA – Alle woorden in één array
     // ------------------------------
-    const allQuestions = [
-        // Oorspronkelijke woorden
+    const allQuestionsFinal = [
+        // Basis woorden
         { en: "Suitcase", correctNl: "Koffer", othersNl: ["Tas", "Kast", "Doos"] },
         { en: "Airport", correctNl: "Vliegveld", othersNl: ["Treinstation", "Busstation", "Haven"] },
+        { en: "Ice cream", correctNl: "IJsje", othersNl: ["Koekje", "Taart", "Chips"] },
+        { en: "Sun cream", correctNl: "Zonnecrème", othersNl: ["Tandpasta", "Shampoo", "Deodorant"] },
+        { en: "Swimming pool", correctNl: "Zwembad", othersNl: ["Meer", "Zee", "Rivieroever"] },
+        { en: "Beach ball", correctNl: "Strandbal", othersNl: ["Voetbal", "Tennisbal", "Basketbal"] },
+        { en: "Flip-flops", correctNl: "Slippers", othersNl: ["Schoenen", "Sokken", "Laarzen"] },
+        { en: "Sunglasses", correctNl: "Zonnebril", othersNl: ["Leesbril", "Skibril", "Zwembril"] },
+        { en: "Sandcastle", correctNl: "Zandkasteel", othersNl: ["Sneeuwman", "Lego-huis", "Tent"] },
+        { en: "Holiday", correctNl: "Vakantie", othersNl: ["School", "Werk", "Weekend"] },
+        { en: "Fun", correctNl: "Leuk", othersNl: ["Saai", "Moeilijk", "Vies"] },
+        { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] },
+        { en: "Passport", correctNl: "Paspoort", othersNl: ["Kaart", "Boek", "Rijbewijs"] },
+        { en: "Ticket", correctNl: "Ticket", othersNl: ["Bon", "Geld", "Adres"] },
+        { en: "Airplane", correctNl: "Vliegtuig", othersNl: ["Auto", "Bus", "Boot"] },
+        { en: "Hotel", correctNl: "Hotel", othersNl: ["Winkel", "School", "Kantoor"] },
+        { en: "Booking", correctNl: "Boeking", othersNl: ["Plank", "Kist", "Recept"] },
+        { en: "Map", correctNl: "Kaart", othersNl: ["Telefoon", "Sleutel", "Boek"] },
+        { en: "Currency", correctNl: "Valuta", othersNl: ["Koffie", "Zeep", "Muziek"] },
+        { en: "Souvenir", correctNl: "Souvenir", othersNl: ["Krant", "Stoel", "Gereedschap"] },
+        { en: "Reservation", correctNl: "Reservering", othersNl: ["Boodschap", "Vraag", "Antwoord"] },
+        { en: "Check-in", correctNl: "Inchecken", othersNl: ["Uitchecken", "Zwemmen", "Eten"] },
+        { en: "Baggage claim", correctNl: "Bagageband", othersNl: ["Parkeerplaats", "Winkel", "Douane"] },
+        { en: "Gate", correctNl: "Gate", othersNl: ["Poort", "Hal", "Trap"] },
+        { en: "Window seat", correctNl: "Raamplaats", othersNl: ["Gangpad", "Tafel", "Stoel"] },
+        { en: "Aisle seat", correctNl: "Gangpadplaats", othersNl: ["Raam", "Balkon", "Deur"] },
+        { en: "Take off", correctNl: "Opstijgen", othersNl: ["Landen", "Rennen", "Slapen"] },
+        { en: "Landing", correctNl: "Landen", othersNl: ["Vliegen", "Springen", "Zitten"] },
+        { en: "Captain", correctNl: "Gezagvoerder", othersNl: ["Kok", "Ober", "Gids"] },
+        { en: "Flight attendant", correctNl: "Stewardess", othersNl: ["Piloot", "Passagier", "Reiziger"] },
+        { en: "Delayed", correctNl: "Vertraagd", othersNl: ["Op Tijd", "Snel", "Vroeg"] },
+        { en: "Lost and found", correctNl: "Gevonden voorwerpen", othersNl: ["Kassa", "Toilet", "Informatie"] },
+        { en: "Motorcycle", correctNl: "Motorfiets", othersNl: ["Fiets", "Scooter", "Tractor"] },
+        { en: "Car rental", correctNl: "Autoverhuur", othersNl: ["Verzekering", "Benzine", "Winkel"] },
+        { en: "Road trip", correctNl: "Roadtrip", othersNl: ["Wandeling", "Zwemmen", "Koken"] },
+        { en: "To drive", correctNl: "Rijden", othersNl: ["Lopen", "Varen", "Zingen"] },
+        { en: "To sail", correctNl: "Zeilen", othersNl: ["Vliegen", "Rennen", "Slapen"] },
+        { en: "Cruise", correctNl: "Cruise", othersNl: ["Trein", "Bus", "Fiets"] },
+        { en: "Port", correctNl: "Haven", othersNl: ["Veld", "Bos", "Berg"] },
+        { en: "Ferry", correctNl: "Veerboot", othersNl: ["Jacht", "Kano", "Vliegtuig"] },
+        { en: "Sunburn", correctNl: "Zonnebrand", othersNl: ["Zonnebloem", "Zonnebril", "Zonneschijn"] },
+        { en: "Shade", correctNl: "Schaduw", othersNl: ["Zon", "Wolken", "Regen"] },
+        { en: "Towel", correctNl: "Handdoek", othersNl: ["Deken", "Kussen", "Badjas"] },
+        { en: "Umbrella", correctNl: "Paraplu", othersNl: ["Zonnescherm", "Rugzak", "Lantaarn"] },
+        { en: "Snorkeling", correctNl: "Snorkelen", othersNl: ["Skiën", "Fietsen", "Klimmen"] },
+        { en: "Diving", correctNl: "Duiken", othersNl: ["Wandelen", "Zwemmen", "Zonnen"] },
+        { en: "Goggles", correctNl: "Zwembril", othersNl: ["Muts", "Sokken", "Slippers"] },
+        { en: "Life jacket", correctNl: "Reddingsvest", othersNl: ["Badpak", "Zwemband", "Handdoek"] },
+        { en: "To swim", correctNl: "Zwemmen", othersNl: ["Rennen", "Fietsen", "Slapen"] },
+        { en: "To float", correctNl: "Drijven", othersNl: ["Zinken", "Vallen", "Staan"] },
+        { en: "Current (water)", correctNl: "Stroming", othersNl: ["Golf", "Wind", "Zand"] },
+        { en: "Wave", correctNl: "Golf", othersNl: ["Zee", "Zand", "Boot"] },
+        { en: "Seashell", correctNl: "Schelp", othersNl: ["Steen", "Vis", "Kwal"] },
+        { en: "Jellyfish", correctNl: "Kwal", othersNl: ["Vis", "Dolfijn", "Krab"] },
+        { en: "Fish", correctNl: "Vis", othersNl: ["Vogel", "Hond", "Kat"] },
+        { en: "Sand", correctNl: "Zand", othersNl: ["Gras", "Modder", "Water"] },
+        { en: "Tide", correctNl: "Getij", othersNl: ["Maan", "Zon", "Wolken"] },
+        { en: "Boardwalk", correctNl: "Boulevard", othersNl: ["Weg", "Pad", "Steen"] },
+        { en: "Palmtree", correctNl: "Palmboom", othersNl: ["Eik", "Berk", "Spar"] },
+        { en: "Cocktail", correctNl: "Cocktail", othersNl: ["Koffie", "Thee", "Melk"] },
+        { en: "Ice cubes", correctNl: "IJsblokjes", othersNl: ["Water", "Frisdrank", "Fruit"] },
+        { en: "Waiter", correctNl: "Ober", othersNl: ["Kok", "Klant", "Reiziger"] },
+        { en: "Restaurant", correctNl: "Restaurant", othersNl: ["Kamer", "Kantoor", "Winkel"] },
+        { en: "Breakfast", correctNl: "Ontbijt", othersNl: ["Lunch", "Diner", "Koffie"] },
+        { en: "Dinner", correctNl: "Diner", othersNl: ["Ontbijt", "Lunch", "Taart"] },
+        { en: "Dessert", correctNl: "Nagerecht", othersNl: ["Hoofdgerecht", "Voorgerecht", "Drankje"] },
+        { en: "Menu", correctNl: "Menu", othersNl: ["Krant", "Boek", "Plank"] },
+        { en: "Tip", correctNl: "Fooi", othersNl: ["Geld", "Adres", "Vraag"] },
+        { en: "Delicious", correctNl: "Heerlijk", othersNl: ["Slecht", "Mooi", "Groot"] },
+        { en: "Hungry", correctNl: "Hongerig", othersNl: ["Dorstig", "Moe", "Blij"] },
+        { en: "Thirsty", correctNl: "Dorstig", othersNl: ["Hongerig", "Blij", "Verdrietig"] },
+        { en: "To order", correctNl: "Bestellen", othersNl: ["Betalen", "Zien", "Horen"] },
+        { en: "To pay", correctNl: "Betalen", othersNl: ["Bestellen", "Lachen", "Slapen"] },
+        { en: "Local", correctNl: "Lokaal", othersNl: ["Ver", "Groot", "Nieuw"] },
+        { en: "Sightseeing", correctNl: "Bezienswaardigheden bekijken", othersNl: ["Slapen", "Eten", "Werken"] },
+        { en: "Museum", correctNl: "Museum", othersNl: ["Winkel", "School", "Kerk"] },
+        { en: "Castle", correctNl: "Kasteel", othersNl: ["Huis", "Flat", "Hut"] },
+        { en: "Square (city)", correctNl: "Plein", othersNl: ["Straat", "Park", "Brug"] },
+        { en: "Market", correctNl: "Markt", othersNl: ["Strand", "Zee", "Bos"] },
+        { en: "Statue", correctNl: "Standbeeld", othersNl: ["Boom", "Stoel", "Auto"] },
+        { en: "Guide", correctNl: "Gids", othersNl: ["Reiziger", "Verkoper", "Ober"] },
+        { en: "To explore", correctNl: "Verkennen", othersNl: ["Slapen", "Zitten", "Wachten"] },
+        { en: "Exciting", correctNl: "Spannend", othersNl: ["Saai", "Rustig", "Licht"] },
+        { en: "Relaxing", correctNl: "Ontspannend", othersNl: ["Druk", "Snel", "Moeilijk"] },
+        { en: "Adventure", correctNl: "Avontuur", othersNl: ["Probleem", "Kantoor", "Winkel"] },
+        { en: "View", correctNl: "Uitzicht", othersNl: ["Muur", "Vloer", "Plafond"] },
+        { en: "To take photos", correctNl: "Foto's maken", othersNl: ["Slapen", "Eten", "Wassen"] },
+        { en: "Laughter", correctNl: "Lachen", othersNl: ["Huilen", "Praten", "Zwijgen"] },
+        { en: "Memory", correctNl: "Herinnering", othersNl: ["Droom", "Wens", "Cadeau"] },
+        { en: "Comfortable", correctNl: "Comfortabel", othersNl: ["Hard", "Koud", "Leeg"] },
+        { en: "Room key", correctNl: "Kamersleutel", othersNl: ["Autosleutel", "Telefoon", "Horloge"] },
+        { en: "Balcony", correctNl: "Balkon", othersNl: ["Gang", "Keuken", "Badkamer"] },
+        { en: "Air conditioning", correctNl: "Airco", othersNl: ["Verwarming", "Ventilator", "Muziek"] },
+        { en: "Reception", correctNl: "Receptie", othersNl: ["Bar", "Zwembad", "Lift"] },
+        { en: "Wake-up call", correctNl: "Wekservice", othersNl: ["Telefoon", "Alarm", "Muziek"] },
+        { en: "Safe", correctNl: "Kluis", othersNl: ["Tas", "Bed", "Stoel"] },
+        { en: "Housekeeping", correctNl: "Schoonmaak", othersNl: ["Koken", "Lezen", "Slapen"] },
+        { en: "Pillow", correctNl: "Kussen", othersNl: ["Deken", "Stoel", "Vloer"] },
+        { en: "Blanket", correctNl: "Deken", othersNl: ["Kussen", "Schoen", "Hoed"] },
+        { en: "Mosquito", correctNl: "Mug", othersNl: ["Vlieg", "Mier", "Bij"] },
+        { en: "Rain", correctNl: "Regen", othersNl: ["Zon", "Wind", "Sneeuw"] },
+        { en: "Storm", correctNl: "Storm", othersNl: ["Zon", "Windstilte", "Nevel"] },
+        { en: "Hot", correctNl: "Heet", othersNl: ["Koud", "Warm", "Koel"] },
+        { en: "Cold", correctNl: "Koud", othersNl: ["Heet", "Warm", "Koel"] },
+        { en: "Cloudy", correctNl: "Bewolkt", othersNl: ["Zonnig", "Helder", "Mistig"] },
+        { en: "Windy", correctNl: "Winderig", othersNl: ["Rustig", "Warm", "Vochtig"] },
+        { en: "Clear sky", correctNl: "Heldere lucht", othersNl: ["Mist", "Wolken", "Donker"] },
+        { en: "Sunset", correctNl: "Zonsondergang", othersNl: ["Zonsopgang", "Middag", "Nacht"] },
+        { en: "Sunrise", correctNl: "Zonsopgang", othersNl: ["Zonsondergang", "Middag", "Avond"] },
+        { en: "Mountain", correctNl: "Berg", othersNl: ["Vallei", "Meer", "Woestijn"] },
+        { en: "Lake", correctNl: "Meer", othersNl: ["Zee", "Rivier", "Oceaan"] },
+        { en: "Forest", correctNl: "Bos", othersNl: ["Strand", "Veld", "Stad"] },
+        { en: "Desert", correctNl: "Woestijn", othersNl: ["Berg", "Zee", "Woud"] },
+        { en: "Village", correctNl: "Dorp", othersNl: ["Stad", "Hoofdstad", "Regio"] },
+        { en: "Capital", correctNl: "Hoofdstad", othersNl: ["Dorp", "Provincie", "Land"] },
+        { en: "Shopping", correctNl: "Winkelen", othersNl: ["Werken", "Koken", "Slapen"] },
+        { en: "Discount", correctNl: "Korting", othersNl: ["Prijs", "Belasting", "Cadeau"] },
+        { en: "To buy", correctNl: "Kopen", othersNl: ["Verkopen", "Geven", "Huren"] },
+        { en: "To rent", correctNl: "Huren", othersNl: ["Kopen", "Lenen", "Geven"] },
+        { en: "Beach", correctNl: "Strand", othersNl: ["Park", "Bos", "Tuin"] },
+        { en: "Sunscreen", correctNl: "Zonnebrandcrème", othersNl: ["Aftersun", "Bodylotion", "Handcrème"] },
+        { en: "Luggage", correctNl: "Bagage", othersNl: ["Koffer", "Tas", "Rugzak"] },
+        { en: "Flight", correctNl: "Vlucht", othersNl: ["Reis", "Trip", "Tocht"] },
+        { en: "Departure", correctNl: "Vertrek", othersNl: ["Aankomst", "Landing", "Start"] },
+        { en: "Arrival", correctNl: "Aankomst", othersNl: ["Vertrek", "Landing", "Stoppen"] },
+        { en: "Boarding pass", correctNl: "Instapkaart", othersNl: ["Paspoort", "Ticket", "Bewijs"] },
+        { en: "Security", correctNl: "Beveiliging", othersNl: ["Politie", "Douane", "Controle"] },
+        { en: "Customs", correctNl: "Douane", othersNl: ["Beveiliging", "Kassa", "Balie"] },
+        { en: "Taxi", correctNl: "Taxi", othersNl: ["Bus", "Tram", "Metro"] },
+        { en: "Bus", correctNl: "Bus", othersNl: ["Trein", "Taxi", "Auto"] },
+        { en: "Train", correctNl: "Trein", othersNl: ["Bus", "Metro", "Tram"] },
+        { en: "Boat", correctNl: "Boot", othersNl: ["Schip", "Jacht", "Veerboot"] },
+        { en: "Ship", correctNl: "Schip", othersNl: ["Boot", "Vliegtuig", "Trein"] },
+        { en: "Journey", correctNl: "Reis", othersNl: ["Vakantie", "Trip", "Uitstapje"] },
+        { en: "Traveler", correctNl: "Reiziger", othersNl: ["Toerist", "Gast", "Bezoeker"] },
+        { en: "Tourist", correctNl: "Toerist", othersNl: ["Reiziger", "Gids", "Bezoeker"] },
+        { en: "Backpack", correctNl: "Rugzak", othersNl: ["Koffer", "Tas", "Zak"] },
+        { en: "Camera", correctNl: "Camera", othersNl: ["Telefoon", "Foto", "Film"] },
+        { en: "Photo", correctNl: "Foto", othersNl: ["Plaatje", "Camera", "Film"] },
+        { en: "Postcard", correctNl: "Ansichtkaart", othersNl: ["Brief", "Kaart", "Foto"] },
+        { en: "Stamp", correctNl: "Postzegel", othersNl: ["Stempel", "Munt", "Ticket"] },
+        { en: "Destination", correctNl: "Bestemming", othersNl: ["Locatie", "Plaats", "Land"] },
+        { en: "Journey time", correctNl: "Reistijd", othersNl: ["Vertrektijd", "Aankomsttijd", "Wachttijd"] },
+        { en: "Platform", correctNl: "Perron", othersNl: ["Station", "Halte", "Trap"] },
+        { en: "Station", correctNl: "Station", othersNl: ["Halte", "Vliegveld", "Haven"] },
+        { en: "Rent a car", correctNl: "Auto huren", othersNl: ["Auto kopen", "Taxi nemen", "Rijden"] },
+        { en: "Driver", correctNl: "Chauffeur", othersNl: ["Passagier", "Gids", "Piloot"] },
+        { en: "Passenger", correctNl: "Passagier", othersNl: ["Chauffeur", "Piloot", "Reiziger"] },
+        { en: "Seat", correctNl: "Stoel", othersNl: ["Bank", "Plaats", "Zitje"] },
+        { en: "Seatbelt", correctNl: "Veiligheidsgordel", othersNl: ["Riem", "Band", "Slot"] },
+        { en: "Emergency exit", correctNl: "Nooduitgang", othersNl: ["Uitgang", "Deur", "Trap"] },
+        { en: "Overhead bin", correctNl: "Bagagerek", othersNl: ["Kast", "Plank", "Lade"] },
+        { en: "Tray table", correctNl: "Klaptafel", othersNl: ["Tafel", "Blad", "Dienblad"] },
+        { en: "Life vest", correctNl: "Zwemvest", othersNl: ["Reddingsvest", "Jas", "Vest"] },
+        { en: "Turbulence", correctNl: "Turbulentie", othersNl: ["Wind", "Storm", "Weer"] },
+        { en: "Layover", correctNl: "Overstap", othersNl: ["Vertrek", "Aankomst", "Pauze"] },
+        { en: "Direct flight", correctNl: "Directe vlucht", othersNl: ["Snelle vlucht", "Korte vlucht", "Overstap"] },
+        { en: "Connecting flight", correctNl: "Aansluitende vlucht", othersNl: ["Volgende vlucht", "Tweede vlucht", "Terugvlucht"] },
+        { en: "One-way ticket", correctNl: "Enkele reis", othersNl: ["Retour", "Dagkaart", "Strippenkaart"] },
+        { en: "Return ticket", correctNl: "Retour", othersNl: ["Enkele reis", "Dagkaart", "Weekkaart"] },
+        { en: "Economy class", correctNl: "Economie klasse", othersNl: ["Business class", "Eerste klas", "Budget klas"] },
+        { en: "Business class", correctNl: "Business class", othersNl: ["Economie klasse", "Eerste klas", "Premium"] },
+        { en: "First class", correctNl: "Eerste klas", othersNl: ["Business class", "Economie", "VIP"] },
+        { en: "Upgrade", correctNl: "Upgrade", othersNl: ["Verbetering", "Verandering", "Bonus"] },
+        { en: "Delay", correctNl: "Vertraging", othersNl: ["Stilstand", "Pauze", "Stop"] },
+        { en: "Cancelled", correctNl: "Geannuleerd", othersNl: ["Uitgesteld", "Vertraagd", "Gestopt"] },
+        { en: "On time", correctNl: "Op tijd", othersNl: ["Te laat", "Vroeg", "Snel"] },
+        { en: "Early", correctNl: "Vroeg", othersNl: ["Laat", "Op tijd", "Snel"] },
+        { en: "Late", correctNl: "Laat", othersNl: ["Vroeg", "Op tijd", "Langzaam"] },
+        { en: "Lobby", correctNl: "Lobby", othersNl: ["Hal", "Gang", "Kamer"] },
+        { en: "Elevator", correctNl: "Lift", othersNl: ["Trap", "Roltrap", "Gang"] },
+        { en: "Stairs", correctNl: "Trap", othersNl: ["Lift", "Roltrap", "Ladder"] },
+        { en: "Floor", correctNl: "Verdieping", othersNl: ["Vloer", "Etage", "Niveau"] },
+        { en: "Single room", correctNl: "Eenpersoonskamer", othersNl: ["Tweepersoonskamer", "Suite", "Kamer"] },
+        { en: "Double room", correctNl: "Tweepersoonskamer", othersNl: ["Eenpersoonskamer", "Suite", "Familiekamer"] },
+        { en: "Suite", correctNl: "Suite", othersNl: ["Kamer", "Appartement", "Zaal"] },
+        { en: "Bed", correctNl: "Bed", othersNl: ["Stoel", "Bank", "Matras"] },
+        { en: "Bathroom", correctNl: "Badkamer", othersNl: ["Toilet", "Douche", "Kamer"] },
+        { en: "Shower", correctNl: "Douche", othersNl: ["Bad", "Kraan", "Wasbak"] },
+        { en: "Bath", correctNl: "Bad", othersNl: ["Douche", "Wasbak", "Zwembad"] },
+        { en: "Toilet", correctNl: "Toilet", othersNl: ["Badkamer", "WC", "Wasbak"] },
+        { en: "Sink", correctNl: "Wasbak", othersNl: ["Bad", "Douche", "Toilet"] },
+        { en: "Mirror", correctNl: "Spiegel", othersNl: ["Raam", "Glas", "Foto"] },
+        { en: "Soap", correctNl: "Zeep", othersNl: ["Shampoo", "Crème", "Gel"] },
+        { en: "Shampoo", correctNl: "Shampoo", othersNl: ["Zeep", "Conditioner", "Gel"] },
+        { en: "Toothbrush", correctNl: "Tandenborstel", othersNl: ["Tandpasta", "Kam", "Borstel"] },
+        { en: "Toothpaste", correctNl: "Tandpasta", othersNl: ["Tandenborstel", "Zeep", "Crème"] },
+        { en: "Hairdryer", correctNl: "Föhn", othersNl: ["Ventilator", "Heater", "Stofzuiger"] },
+        { en: "TV", correctNl: "Televisie", othersNl: ["Radio", "Computer", "Tablet"] },
+        { en: "Remote control", correctNl: "Afstandsbediening", othersNl: ["Telefoon", "Controller", "Knop"] },
+        { en: "Mini bar", correctNl: "Minibar", othersNl: ["Koelkast", "Bar", "Kast"] },
+        { en: "Wardrobe", correctNl: "Kledingkast", othersNl: ["Kast", "Lade", "Plank"] },
+        { en: "Hanger", correctNl: "Kleerhanger", othersNl: ["Haak", "Kast", "Knop"] },
+        { en: "Laundry", correctNl: "Wasserij", othersNl: ["Schoonmaak", "Was", "Stomerij"] },
+        { en: "Iron", correctNl: "Strijkijzer", othersNl: ["Föhn", "Was", "Strijkplank"] },
+        { en: "Do not disturb", correctNl: "Niet storen", othersNl: ["Welkom", "Schoonmaak", "Open"] },
+        { en: "Checkout", correctNl: "Uitchecken", othersNl: ["Inchecken", "Betalen", "Vertrekken"] },
+        { en: "Bill", correctNl: "Rekening", othersNl: ["Geld", "Bon", "Betaling"] },
+        { en: "Credit card", correctNl: "Creditcard", othersNl: ["Bankpas", "Geld", "Portemonnee"] },
+        { en: "Cash", correctNl: "Contant geld", othersNl: ["Creditcard", "Betaalpas", "Cheque"] },
+        { en: "ATM", correctNl: "Geldautomaat", othersNl: ["Bank", "Kassa", "Automaat"] },
+        { en: "Exchange rate", correctNl: "Wisselkoers", othersNl: ["Prijs", "Tarief", "Kosten"] },
+        { en: "Insurance", correctNl: "Verzekering", othersNl: ["Garantie", "Contract", "Bewijs"] },
+        { en: "Emergency", correctNl: "Noodgeval", othersNl: ["Probleem", "Alarm", "Gevaar"] },
+        { en: "Hospital", correctNl: "Ziekenhuis", othersNl: ["Dokter", "Apotheek", "Kliniek"] },
+        { en: "Doctor", correctNl: "Dokter", othersNl: ["Verpleegster", "Apotheker", "Tandarts"] },
+        { en: "Pharmacy", correctNl: "Apotheek", othersNl: ["Ziekenhuis", "Winkel", "Drogist"] },
+        { en: "Medicine", correctNl: "Medicijn", othersNl: ["Pil", "Dokter", "Behandeling"] },
+        { en: "Headache", correctNl: "Hoofdpijn", othersNl: ["Buikpijn", "Pijn", "Ziekte"] },
+        { en: "Fever", correctNl: "Koorts", othersNl: ["Verkoudheid", "Griep", "Hoofdpijn"] },
+        { en: "Allergy", correctNl: "Allergie", othersNl: ["Ziekte", "Koorts", "Pijn"] },
+        { en: "Seasick", correctNl: "Zeeziek", othersNl: ["Ziek", "Misselijk", "Duizelig"] },
+        { en: "Sunstroke", correctNl: "Zonnesteek", othersNl: ["Zonnebrand", "Hoofdpijn", "Koorts"] },
+        { en: "Travel insurance", correctNl: "Reisverzekering", othersNl: ["Verzekering", "Bewijs", "Garantie"] },
+        { en: "Guidebook", correctNl: "Reisgids", othersNl: ["Boek", "Kaart", "Gids"] },
+        { en: "Brochure", correctNl: "Brochure", othersNl: ["Folder", "Boekje", "Kaart"] },
+        { en: "Information", correctNl: "Informatie", othersNl: ["Vraag", "Antwoord", "Hulp"] },
+        { en: "Help", correctNl: "Hulp", othersNl: ["Service", "Steun", "Informatie"] }
     ];
 
-   const extraWords = [
-    { en: "Ice cream", correctNl: "IJsje", othersNl: ["Koekje", "Taart", "Chips"] },
-    { en: "Sun cream", correctNl: "Zonnecrème", othersNl: ["Tandpasta", "Shampoo", "Deodorant"] },
-    { en: "Swimming pool", correctNl: "Zwembad", othersNl: ["Meer", "Zee", "Rivieroever"] },
-    { en: "Beach ball", correctNl: "Strandbal", othersNl: ["Voetbal", "Tennisbal", "Basketbal"] },
-    { en: "Flip-flops", correctNl: "Slippers", othersNl: ["Schoenen", "Sokken", "Laarzen"] },
-    { en: "Sunglasses", correctNl: "Zonnebril", othersNl: ["Leesbril", "Skibril", "Zwembril"] },
-    { en: "Sandcastle", correctNl: "Zandkasteel", othersNl: ["Sneeuwman", "Lego-huis", "Tent"] },
-    { en: "Holiday", correctNl: "Vakantie", othersNl: ["School", "Werk", "Weekend"] },
-    { en: "Fun", correctNl: "Leuk", othersNl: ["Saai", "Moeilijk", "Vies"] },
-    { en: "Family", correctNl: "Familie", othersNl: ["Vrienden", "Docent", "Dokter"] }
-];
-const moreExtraWords = [
-    { en: "Passport", correctNl: "Paspoort", othersNl: ["Kaart", "Boek", "Rijbewijs"] },
-    { en: "Ticket", correctNl: "Ticket", othersNl: ["Bon", "Geld", "Adres"] },
-    { en: "Airplane", correctNl: "Vliegtuig", othersNl: ["Auto", "Bus", "Boot"] },
-    { en: "Hotel", correctNl: "Hotel", othersNl: ["Winkel", "School", "Kantoor"] },
-    { en: "Booking", correctNl: "Boeking", othersNl: ["Plank", "Kist", "Recept"] },
-    { en: "Map", correctNl: "Kaart", othersNl: ["Telefoon", "Sleutel", "Boek"] },
-    { en: "Currency", correctNl: "Valuta", othersNl: ["Koffie", "Zeep", "Muziek"] },
-    { en: "Souvenir", correctNl: "Souvenir", othersNl: ["Krant", "Stoel", "Gereedschap"] },
-    { en: "Reservation", correctNl: "Reservering", othersNl: ["Boodschap", "Vraag", "Antwoord"] },
-    { en: "Check-in", correctNl: "Inchecken", othersNl: ["Uitchecken", "Zwemmen", "Eten"] },
-    { en: "Baggage claim", correctNl: "Bagageband", othersNl: ["Parkeerplaats", "Winkel", "Douane"] },
-    { en: "Gate", correctNl: "Gate", othersNl: ["Poort", "Hal", "Trap"] },
-    { en: "Window seat", correctNl: "Raamplaats", othersNl: ["Gangpad", "Tafel", "Stoel"] },
-    { en: "Aisle seat", correctNl: "Gangpadplaats", othersNl: ["Raam", "Balkon", "Deur"] },
-    { en: "Take off", correctNl: "Opstijgen", othersNl: ["Landen", "Rennen", "Slapen"] },
-    { en: "Landing", correctNl: "Landen", othersNl: ["Vliegen", "Springen", "Zitten"] },
-    { en: "Captain", correctNl: "Gezagvoerder", othersNl: ["Kok", "Ober", "Gids"] },
-    { en: "Flight attendant", correctNl: "Stewardess", othersNl: ["Piloot", "Passagier", "Reiziger"] },
-    { en: "Delayed", correctNl: "Vertraagd", othersNl: ["Op Tijd", "Snel", "Vroeg"] },
-    { en: "Lost and found", correctNl: "Gevonden voorwerpen", othersNl: ["Kassa", "Toilet", "Informatie"] },
-    { en: "Motorcycle", correctNl: "Motorfiets", othersNl: ["Fiets", "Scooter", "Tractor"] },
-    { en: "Car rental", correctNl: "Autoverhuur", othersNl: ["Verzekering", "Benzine", "Winkel"] },
-    { en: "Road trip", correctNl: "Roadtrip", othersNl: ["Wandeling", "Zwemmen", "Koken"] },
-    { en: "To drive", correctNl: "Rijden", othersNl: ["Lopen", "Varen", "Zingen"] },
-    { en: "To sail", correctNl: "Zeilen", othersNl: ["Vliegen", "Rennen", "Slapen"] },
-    { en: "Cruise", correctNl: "Cruise", othersNl: ["Trein", "Bus", "Fiets"] },
-    { en: "Port", correctNl: "Haven", othersNl: ["Veld", "Bos", "Berg"] },
-    { en: "Ferry", correctNl: "Veerboot", othersNl: ["Jacht", "Kano", "Vliegtuig"] },
-    { en: "Sunburn", correctNl: "Zonnebrand", othersNl: ["Zonnebloem", "Zonnebril", "Zonneschijn"] },
-    { en: "Shade", correctNl: "Schaduw", othersNl: ["Zon", "Wolken", "Regen"] },
-    { en: "Towel", correctNl: "Handdoek", othersNl: ["Deken", "Kussen", "Badjas"] },
-    { en: "Umbrella", correctNl: "Paraplu", othersNl: ["Zonnescherm", "Rugzak", "Lantaarn"] },
-    { en: "Snorkeling", correctNl: "Snorkelen", othersNl: ["Skiën", "Fietsen", "Klimmen"] },
-    { en: "Diving", correctNl: "Duiken", othersNl: ["Wandelen", "Zwemmen", "Zonnen"] },
-    { en: "Goggles", correctNl: "Zwembril", othersNl: ["Muts", "Sokken", "Slippers"] },
-    { en: "Life jacket", correctNl: "Reddingsvest", othersNl: ["Badpak", "Zwemband", "Handdoek"] },
-    { en: "To swim", correctNl: "Zwemmen", othersNl: ["Rennen", "Fietsen", "Slapen"] },
-    { en: "To float", correctNl: "Drijven", othersNl: ["Zinken", "Vallen", "Staan"] },
-    { en: "Current (water)", correctNl: "Stroming", othersNl: ["Golf", "Wind", "Zand"] },
-    { en: "Wave", correctNl: "Golf", othersNl: ["Zee", "Zand", "Boot"] },
-    { en: "Seashell", correctNl: "Schelp", othersNl: ["Steen", "Vis", "Kwal"] },
-    { en: "Jellyfish", correctNl: "Kwal", othersNl: ["Vis", "Dolfijn", "Krab"] },
-    { en: "Fish", correctNl: "Vis", othersNl: ["Vogel", "Hond", "Kat"] },
-    { en: "Sand", correctNl: "Zand", othersNl: ["Gras", "Modder", "Water"] },
-    { en: "Tide", correctNl: "Getij", othersNl: ["Maan", "Zon", "Wolken"] },
-    { en: "Boardwalk", correctNl: "Boulevard", othersNl: ["Weg", "Pad", "Steen"] },
-    { en: "Palmtree", correctNl: "Palmboom", othersNl: ["Eik", "Berk", "Spar"] },
-    { en: "Cocktail", correctNl: "Cocktail", othersNl: ["Koffie", "Thee", "Melk"] },
-    { en: "Ice cubes", correctNl: "IJsblokjes", othersNl: ["Water", "Frisdrank", "Fruit"] },
-    { en: "Waiter", correctNl: "Ober", othersNl: ["Kok", "Klant", "Reiziger"] },
-    { en: "Restaurant", correctNl: "Restaurant", othersNl: ["Kamer", "Kantoor", "Winkel"] },
-    { en: "Breakfast", correctNl: "Ontbijt", othersNl: ["Lunch", "Diner", "Koffie"] },
-    { en: "Dinner", correctNl: "Diner", othersNl: ["Ontbijt", "Lunch", "Taart"] },
-    { en: "Dessert", correctNl: "Nagerecht", othersNl: ["Hoofdgerecht", "Voorgerecht", "Drankje"] },
-    { en: "Menu", correctNl: "Menu", othersNl: ["Krant", "Boek", "Plank"] },
-    { en: "Tip", correctNl: "Fooi", othersNl: ["Geld", "Adres", "Vraag"] },
-    { en: "Delicious", correctNl: "Heerlijk", othersNl: ["Slecht", "Mooi", "Groot"] },
-    { en: "Hungry", correctNl: "Hongerig", othersNl: ["Dorstig", "Moe", "Blij"] },
-    { en: "Thirsty", correctNl: "Dorstig", othersNl: ["Hongerig", "Blij", "Verdrietig"] },
-    { en: "To order", correctNl: "Bestellen", othersNl: ["Betalen", "Zien", "Horen"] },
-    { en: "To pay", correctNl: "Betalen", othersNl: ["Bestellen", "Lachen", "Slapen"] },
-    { en: "Local", correctNl: "Lokaal", othersNl: ["Ver", "Groot", "Nieuw"] },
-    { en: "Sightseeing", correctNl: "Bezienswaardigheden bekijken", othersNl: ["Slapen", "Eten", "Werken"] },
-    { en: "Museum", correctNl: "Museum", othersNl: ["Winkel", "School", "Kerk"] },
-    { en: "Castle", correctNl: "Kasteel", othersNl: ["Huis", "Flat", "Hut"] },
-    { en: "Square (city)", correctNl: "Plein", othersNl: ["Straat", "Park", "Brug"] },
-    { en: "Market", correctNl: "Markt", othersNl: ["Strand", "Zee", "Bos"] },
-    { en: "Statue", correctNl: "Standbeeld", othersNl: ["Boom", "Stoel", "Auto"] },
-    { en: "Guide", correctNl: "Gids", othersNl: ["Reiziger", "Verkoper", "Ober"] },
-    { en: "To explore", correctNl: "Verkennen", othersNl: ["Slapen", "Zitten", "Wachten"] },
-    { en: "Exciting", correctNl: "Spannend", othersNl: ["Saai", "Rustig", "Licht"] },
-    { en: "Relaxing", correctNl: "Ontspannend", othersNl: ["Druk", "Snel", "Moeilijk"] },
-    { en: "Adventure", correctNl: "Avontuur", othersNl: ["Probleem", "Kantoor", "Winkel"] },
-    { en: "View", correctNl: "Uitzicht", othersNl: ["Muur", "Vloer", "Plafond"] },
-    { en: "To take photos", correctNl: "Foto's maken", othersNl: ["Slapen", "Eten", "Wassen"] },
-    { en: "Laughter", correctNl: "Lachen", othersNl: ["Huilen", "Praten", "Zwijgen"] },
-    { en: "Memory", correctNl: "Herinnering", othersNl: ["Droom", "Wens", "Cadeau"] },
-    { en: "Comfortable", correctNl: "Comfortabel", othersNl: ["Hard", "Koud", "Leeg"] },
-    { en: "Room key", correctNl: "Kamersleutel", othersNl: ["Autosleutel", "Telefoon", "Horloge"] },
-    { en: "Balcony", correctNl: "Balkon", othersNl: ["Gang", "Keuken", "Badkamer"] },
-    { en: "Air conditioning", correctNl: "Airco", othersNl: ["Verwarming", "Ventilator", "Muziek"] },
-    { en: "Reception", correctNl: "Receptie", othersNl: ["Bar", "Zwembad", "Lift"] },
-    { en: "Wake-up call", correctNl: "Wekservice", othersNl: ["Telefoon", "Alarm", "Muziek"] },
-    { en: "Safe", correctNl: "Kluis", othersNl: ["Tas", "Bed", "Stoel"] },
-    { en: "Housekeeping", correctNl: "Schoonmaak", othersNl: ["Koken", "Lezen", "Slapen"] },
-    { en: "Pillow", correctNl: "Kussen", othersNl: ["Deken", "Stoel", "Vloer"] },
-    { en: "Blanket", correctNl: "Deken", othersNl: ["Kussen", "Schoen", "Hoed"] },
-    { en: "Mosquito", correctNl: "Mug", othersNl: ["Vlieg", "Mier", "Bij"] },
-    { en: "Rain", correctNl: "Regen", othersNl: ["Zon", "Wind", "Sneeuw"] },
-    { en: "Storm", correctNl: "Storm", othersNl: ["Zon", "Windstilte", "Nevel"] },
-    { en: "Hot", correctNl: "Heet", othersNl: ["Koud", "Warm", "Koel"] },
-    { en: "Cold", correctNl: "Koud", othersNl: ["Heet", "Warm", "Koel"] },
-    { en: "Cloudy", correctNl: "Bewolkt", othersNl: ["Zonnig", "Helder", "Mistig"] },
-    { en: "Windy", correctNl: "Winderig", othersNl: ["Rustig", "Warm", "Vochtig"] },
-    { en: "Clear sky", correctNl: "Heldere lucht", othersNl: ["Mist", "Wolken", "Donker"] },
-    { en: "Sunset", correctNl: "Zonsondergang", othersNl: ["Zonsopgang", "Middag", "Nacht"] },
-    { en: "Sunrise", correctNl: "Zonsopgang", othersNl: ["Zonsondergang", "Middag", "Avond"] },
-    { en: "Mountain", correctNl: "Berg", othersNl: ["Vallei", "Meer", "Woestijn"] },
-    { en: "Lake", correctNl: "Meer", othersNl: ["Zee", "Rivier", "Oceaan"] },
-    { en: "Forest", correctNl: "Bos", othersNl: ["Strand", "Veld", "Stad"] },
-    { en: "Desert", correctNl: "Woestijn", othersNl: ["Berg", "Zee", "Woud"] },
-    { en: "Village", correctNl: "Dorp", othersNl: ["Stad", "Hoofdstad", "Regio"] },
-    { en: "Capital", correctNl: "Hoofdstad", othersNl: ["Dorp", "Provincie", "Land"] },
-    { en: "Shopping", correctNl: "Winkelen", othersNl: ["Werken", "Koken", "Slapen"] },
-    { en: "Discount", correctNl: "Korting", othersNl: ["Prijs", "Belasting", "Cadeau"] },
-    { en: "To buy", correctNl: "Kopen", othersNl: ["Verkopen", "Geven", "Huren"] },
-    { en: "To rent", correctNl: "Huren", othersNl: ["Kopen", "Lenen", "Geven"] },
-    { en: "Beach", correctNl: "Strand", othersNl: ["Park", "Bos", "Tuin"] },
-    { en: "Sunscreen", correctNl: "Zonnebrandcrème", othersNl: ["Aftersun", "Bodylotion", "Handcrème"] },
-    { en: "Luggage", correctNl: "Bagage", othersNl: ["Koffer", "Tas", "Rugzak"] },
-    { en: "Flight", correctNl: "Vlucht", othersNl: ["Reis", "Trip", "Tocht"] },
-    { en: "Departure", correctNl: "Vertrek", othersNl: ["Aankomst", "Landing", "Start"] },
-    { en: "Arrival", correctNl: "Aankomst", othersNl: ["Vertrek", "Landing", "Stoppen"] },
-    { en: "Boarding pass", correctNl: "Instapkaart", othersNl: ["Paspoort", "Ticket", "Bewijs"] },
-    { en: "Security", correctNl: "Beveiliging", othersNl: ["Politie", "Douane", "Controle"] },
-    { en: "Customs", correctNl: "Douane", othersNl: ["Beveiliging", "Kassa", "Balie"] },
-    { en: "Taxi", correctNl: "Taxi", othersNl: ["Bus", "Tram", "Metro"] },
-    { en: "Bus", correctNl: "Bus", othersNl: ["Trein", "Taxi", "Auto"] },
-    { en: "Train", correctNl: "Trein", othersNl: ["Bus", "Metro", "Tram"] },
-    { en: "Boat", correctNl: "Boot", othersNl: ["Schip", "Jacht", "Veerboot"] },
-    { en: "Ship", correctNl: "Schip", othersNl: ["Boot", "Vliegtuig", "Trein"] },
-    { en: "Journey", correctNl: "Reis", othersNl: ["Vakantie", "Trip", "Uitstapje"] },
-    { en: "Traveler", correctNl: "Reiziger", othersNl: ["Toerist", "Gast", "Bezoeker"] },
-    { en: "Tourist", correctNl: "Toerist", othersNl: ["Reiziger", "Gids", "Bezoeker"] },
-    { en: "Backpack", correctNl: "Rugzak", othersNl: ["Koffer", "Tas", "Zak"] },
-    { en: "Camera", correctNl: "Camera", othersNl: ["Telefoon", "Foto", "Film"] },
-    { en: "Photo", correctNl: "Foto", othersNl: ["Plaatje", "Camera", "Film"] },
-    { en: "Postcard", correctNl: "Ansichtkaart", othersNl: ["Brief", "Kaart", "Foto"] },
-    { en: "Stamp", correctNl: "Postzegel", othersNl: ["Stempel", "Munt", "Ticket"] },
-    { en: "Destination", correctNl: "Bestemming", othersNl: ["Locatie", "Plaats", "Land"] },
-    { en: "Journey time", correctNl: "Reistijd", othersNl: ["Vertrektijd", "Aankomsttijd", "Wachttijd"] },
-    { en: "Platform", correctNl: "Perron", othersNl: ["Station", "Halte", "Trap"] },
-    { en: "Station", correctNl: "Station", othersNl: ["Halte", "Vliegveld", "Haven"] },
-    { en: "Rent a car", correctNl: "Auto huren", othersNl: ["Auto kopen", "Taxi nemen", "Rijden"] },
-    { en: "Driver", correctNl: "Chauffeur", othersNl: ["Passagier", "Gids", "Piloot"] },
-    { en: "Passenger", correctNl: "Passagier", othersNl: ["Chauffeur", "Piloot", "Reiziger"] },
-    { en: "Seat", correctNl: "Stoel", othersNl: ["Bank", "Plaats", "Zitje"] },
-    { en: "Seatbelt", correctNl: "Veiligheidsgordel", othersNl: ["Riem", "Band", "Slot"] },
-    { en: "Emergency exit", correctNl: "Nooduitgang", othersNl: ["Uitgang", "Deur", "Trap"] },
-    { en: "Overhead bin", correctNl: "Bagagerek", othersNl: ["Kast", "Plank", "Lade"] },
-    { en: "Tray table", correctNl: "Klaptafel", othersNl: ["Tafel", "Blad", "Dienblad"] },
-    { en: "Life vest", correctNl: "Zwemvest", othersNl: ["Reddingsvest", "Jas", "Vest"] },
-    { en: "Turbulence", correctNl: "Turbulentie", othersNl: ["Wind", "Storm", "Weer"] },
-    { en: "Layover", correctNl: "Overstap", othersNl: ["Vertrek", "Aankomst", "Pauze"] },
-    { en: "Direct flight", correctNl: "Directe vlucht", othersNl: ["Snelle vlucht", "Korte vlucht", "Overstap"] },
-    { en: "Connecting flight", correctNl: "Aansluitende vlucht", othersNl: ["Volgende vlucht", "Tweede vlucht", "Terugvlucht"] },
-    { en: "One-way ticket", correctNl: "Enkele reis", othersNl: ["Retour", "Dagkaart", "Strippenkaart"] },
-    { en: "Return ticket", correctNl: "Retour", othersNl: ["Enkele reis", "Dagkaart", "Weekkaart"] },
-    { en: "Economy class", correctNl: "Economie klasse", othersNl: ["Business class", "Eerste klas", "Budget klas"] },
-    { en: "Business class", correctNl: "Business class", othersNl: ["Economie klasse", "Eerste klas", "Premium"] },
-    { en: "First class", correctNl: "Eerste klas", othersNl: ["Business class", "Economie", "VIP"] },
-    { en: "Upgrade", correctNl: "Upgrade", othersNl: ["Verbetering", "Verandering", "Bonus"] },
-    { en: "Delay", correctNl: "Vertraging", othersNl: ["Stilstand", "Pauze", "Stop"] },
-    { en: "Cancelled", correctNl: "Geannuleerd", othersNl: ["Uitgesteld", "Vertraagd", "Gestopt"] },
-    { en: "On time", correctNl: "Op tijd", othersNl: ["Te laat", "Vroeg", "Snel"] },
-    { en: "Early", correctNl: "Vroeg", othersNl: ["Laat", "Op tijd", "Snel"] },
-    { en: "Late", correctNl: "Laat", othersNl: ["Vroeg", "Op tijd", "Langzaam"] },
-    { en: "Lobby", correctNl: "Lobby", othersNl: ["Hal", "Gang", "Kamer"] },
-    { en: "Elevator", correctNl: "Lift", othersNl: ["Trap", "Roltrap", "Gang"] },
-    { en: "Stairs", correctNl: "Trap", othersNl: ["Lift", "Roltrap", "Ladder"] },
-    { en: "Floor", correctNl: "Verdieping", othersNl: ["Vloer", "Etage", "Niveau"] },
-    { en: "Single room", correctNl: "Eenpersoonskamer", othersNl: ["Tweepersoonskamer", "Suite", "Kamer"] },
-    { en: "Double room", correctNl: "Tweepersoonskamer", othersNl: ["Eenpersoonskamer", "Suite", "Familiekamer"] },
-    { en: "Suite", correctNl: "Suite", othersNl: ["Kamer", "Appartement", "Zaal"] },
-    { en: "Bed", correctNl: "Bed", othersNl: ["Stoel", "Bank", "Matras"] },
-    { en: "Bathroom", correctNl: "Badkamer", othersNl: ["Toilet", "Douche", "Kamer"] },
-    { en: "Shower", correctNl: "Douche", othersNl: ["Bad", "Kraan", "Wasbak"] },
-    { en: "Bath", correctNl: "Bad", othersNl: ["Douche", "Wasbak", "Zwembad"] },
-    { en: "Toilet", correctNl: "Toilet", othersNl: ["Badkamer", "WC", "Wasbak"] },
-    { en: "Sink", correctNl: "Wasbak", othersNl: ["Bad", "Douche", "Toilet"] },
-    { en: "Mirror", correctNl: "Spiegel", othersNl: ["Raam", "Glas", "Foto"] },
-    { en: "Soap", correctNl: "Zeep", othersNl: ["Shampoo", "Crème", "Gel"] },
-    { en: "Shampoo", correctNl: "Shampoo", othersNl: ["Zeep", "Conditioner", "Gel"] },
-    { en: "Toothbrush", correctNl: "Tandenborstel", othersNl: ["Tandpasta", "Kam", "Borstel"] },
-    { en: "Toothpaste", correctNl: "Tandpasta", othersNl: ["Tandenborstel", "Zeep", "Crème"] },
-    { en: "Hairdryer", correctNl: "Föhn", othersNl: ["Ventilator", "Heater", "Stofzuiger"] },
-    { en: "TV", correctNl: "Televisie", othersNl: ["Radio", "Computer", "Tablet"] },
-    { en: "Remote control", correctNl: "Afstandsbediening", othersNl: ["Telefoon", "Controller", "Knop"] },
-    { en: "Mini bar", correctNl: "Minibar", othersNl: ["Koelkast", "Bar", "Kast"] },
-    { en: "Wardrobe", correctNl: "Kledingkast", othersNl: ["Kast", "Lade", "Plank"] },
-    { en: "Hanger", correctNl: "Kleerhanger", othersNl: ["Haak", "Kast", "Knop"] },
-    { en: "Laundry", correctNl: "Wasserij", othersNl: ["Schoonmaak", "Was", "Stomerij"] },
-    { en: "Iron", correctNl: "Strijkijzer", othersNl: ["Föhn", "Was", "Strijkplank"] },
-    { en: "Do not disturb", correctNl: "Niet storen", othersNl: ["Welkom", "Schoonmaak", "Open"] },
-    { en: "Checkout", correctNl: "Uitchecken", othersNl: ["Inchecken", "Betalen", "Vertrekken"] },
-    { en: "Bill", correctNl: "Rekening", othersNl: ["Geld", "Bon", "Betaling"] },
-    { en: "Credit card", correctNl: "Creditcard", othersNl: ["Bankpas", "Geld", "Portemonnee"] },
-    { en: "Cash", correctNl: "Contant geld", othersNl: ["Creditcard", "Betaalpas", "Cheque"] },
-    { en: "ATM", correctNl: "Geldautomaat", othersNl: ["Bank", "Kassa", "Automaat"] },
-    { en: "Exchange rate", correctNl: "Wisselkoers", othersNl: ["Prijs", "Tarief", "Kosten"] },
-    { en: "Insurance", correctNl: "Verzekering", othersNl: ["Garantie", "Contract", "Bewijs"] },
-    { en: "Emergency", correctNl: "Noodgeval", othersNl: ["Probleem", "Alarm", "Gevaar"] },
-    { en: "Hospital", correctNl: "Ziekenhuis", othersNl: ["Dokter", "Apotheek", "Kliniek"] },
-    { en: "Doctor", correctNl: "Dokter", othersNl: ["Verpleegster", "Apotheker", "Tandarts"] },
-    { en: "Pharmacy", correctNl: "Apotheek", othersNl: ["Ziekenhuis", "Winkel", "Drogist"] },
-    { en: "Medicine", correctNl: "Medicijn", othersNl: ["Pil", "Dokter", "Behandeling"] },
-    { en: "Headache", correctNl: "Hoofdpijn", othersNl: ["Buikpijn", "Pijn", "Ziekte"] },
-    { en: "Fever", correctNl: "Koorts", othersNl: ["Verkoudheid", "Griep", "Hoofdpijn"] },
-    { en: "Allergy", correctNl: "Allergie", othersNl: ["Ziekte", "Koorts", "Pijn"] },
-    { en: "Seasick", correctNl: "Zeeziek", othersNl: ["Ziek", "Misselijk", "Duizelig"] },
-    { en: "Sunstroke", correctNl: "Zonnesteek", othersNl: ["Zonnebrand", "Hoofdpijn", "Koorts"] },
-    { en: "Travel insurance", correctNl: "Reisverzekering", othersNl: ["Verzekering", "Bewijs", "Garantie"] },
-    { en: "Guidebook", correctNl: "Reisgids", othersNl: ["Boek", "Kaart", "Gids"] },
-    { en: "Brochure", correctNl: "Brochure", othersNl: ["Folder", "Boekje", "Kaart"] },
-    { en: "Information", correctNl: "Informatie", othersNl: ["Vraag", "Antwoord", "Hulp"] },
-    { en: "Help", correctNl: "Hulp", othersNl: ["Service", "Steun", "Informatie"] }
-];
-    ];
-
-    const allQuestionsFinal = [...allQuestions, ...extraWords, ...moreExtraWords];
-
-    // Toon totaal aantal woorden
-    document.getElementById('total-words').textContent = allQuestionsFinal.length;
+    // Toon totaal aantal woorden bij laden van de pagina
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('total-words').textContent = allQuestionsFinal.length;
+        console.log('Totaal aantal woorden in de quiz:', allQuestionsFinal.length);
+    });
 
     // ------------------------------
     // STATE & DOM
@@ -736,13 +738,15 @@ const moreExtraWords = [
     };
 
     let total = 15, current = 0, score = 0, subset = [];
-    // mode: "EN_NL" = Engels -> Nederlands; "NL_EN" = Nederlands -> Engels
     let mode = "EN_NL";
 
     const modeEnNlBtn = document.getElementById('mode-en-nl');
     const modeNlEnBtn = document.getElementById('mode-nl-en');
     const speakButton = document.getElementById('speak-button');
     const quizTitle = document.getElementById('quiz-title');
+
+    // Standaard Engels -> Nederlands geselecteerd
+    modeEnNlBtn.style.outline = "4px solid #000";
 
     // Modus kiezen
     modeEnNlBtn.onclick = () => {
@@ -761,19 +765,20 @@ const moreExtraWords = [
         let input = document.getElementById('words-input').value.trim();
         total = (input === '' || input === '0') ? allQuestionsFinal.length : parseInt(input) || 15;
         if (total > allQuestionsFinal.length) total = allQuestionsFinal.length;
+        if (total < 1) total = 1;
 
-        score = 0; current = 0;
+        score = 0; 
+        current = 0;
         subset = [...allQuestionsFinal];
-        shuffleArray(subset); // Schud de vragenlijst
+        shuffleArray(subset);
         subset = subset.slice(0, total);
 
-        // Titel en spreek-knop afhankelijk van modus
         if (mode === "EN_NL") {
             quizTitle.textContent = "Engels ➜ Nederlands";
             speakButton.classList.remove('hidden');
         } else {
             quizTitle.textContent = "Nederlands ➜ Engels";
-            speakButton.classList.add('hidden'); // geen uitspraak in NL -> EN modus
+            speakButton.classList.add('hidden');
         }
 
         screens.setup.classList.add('hidden');
@@ -794,7 +799,10 @@ const moreExtraWords = [
     }
 
     function nextQuestion() {
-        if (current >= total) { endQuiz(); return; }
+        if (current >= total) { 
+            endQuiz(); 
+            return; 
+        }
 
         updateProgress();
         const q = subset[current];
@@ -805,10 +813,9 @@ const moreExtraWords = [
         container.innerHTML = '';
 
         if (mode === "EN_NL") {
-            // Engels woord tonen, NL als opties
             document.getElementById('word-display').textContent = q.en;
             const answers = [q.correctNl, ...q.othersNl];
-            shuffleArray(answers); // Schud de NL-antwoordopties
+            shuffleArray(answers);
 
             answers.forEach(ans => {
                 const btn = document.createElement('button');
@@ -817,26 +824,22 @@ const moreExtraWords = [
                 container.appendChild(btn);
             });
 
-            // automatisch uitspreken
             speak(q.en);
 
         } else {
-            // Nederlands woord tonen, Engelse opties (4 opties)
             document.getElementById('word-display').textContent = q.correctNl;
 
-            // 3 andere Engelse woorden zoeken als afleiders
             const distractors = [];
             const pool = allQuestionsFinal.filter(x => x.en !== q.en);
             shuffleArray(pool);
             for (let i = 0; i < pool.length && distractors.length < 3; i++) {
-                // voorkomen dat hetzelfde NL-woord terugkomt (optioneel)
                 if (pool[i].correctNl !== q.correctNl) {
                     distractors.push(pool[i].en);
                 }
             }
 
-            let answersEn = [q.en, ...distractors].slice(0, 4); // zeker max 4
-            shuffleArray(answersEn); // Schud de EN-antwoordopties
+            let answersEn = [q.en, ...distractors].slice(0, 4);
+            shuffleArray(answersEn);
 
             answersEn.forEach(ans => {
                 const btn = document.createElement('button');
@@ -848,7 +851,7 @@ const moreExtraWords = [
     }
 
     function speak(text) {
-        if (mode !== "EN_NL") return; // geen uitspraak in NL -> EN
+        if (mode !== "EN_NL") return;
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(text);
@@ -860,37 +863,39 @@ const moreExtraWords = [
     }
 
     speakButton.onclick = () => {
-        if (mode === "EN_NL") {
+        if (mode === "EN_NL" && subset[current]) {
             speak(subset[current].en);
         }
     };
 
     function selectAnswer(btn, correct, rightAnswer) {
-        // Schakel alle knoppen uit zodra er gekozen is
         document.querySelectorAll('#choices-container button').forEach(b => b.disabled = true);
 
         if (correct) {
             score++;
             btn.classList.add('correct');
             document.getElementById('feedback').innerHTML = 'Super! Goed zo! 🎉';
-            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
+            try {
+                new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
+            } catch(e) {}
 
-            // DIRECT DOORGAAN BIJ GOED (functionaliteit behouden)
             setTimeout(() => {
                 current++;
                 nextQuestion();
-            }, 800); // Wacht 0.8 seconden zodat de gebruiker ziet dat het goed is
+            }, 800);
 
         } else {
             btn.classList.add('incorrect');
             document.getElementById('feedback').innerHTML = `Bijna! Het was: <strong>${rightAnswer}</strong> 😢`;
-            new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
+            try {
+                new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
+            } catch(e) {}
+            
             document.querySelectorAll('#choices-container button').forEach(b => {
                 if (b.textContent === rightAnswer) b.classList.add('correct');
-                else b.style.opacity = '0.6'; // dim other incorrect answers
+                else b.style.opacity = '0.6';
             });
 
-            // TOON 'VOLGENDE' BIJ FOUT (functionaliteit behouden)
             document.getElementById('next-button').classList.remove('hidden');
         }
     }
@@ -912,7 +917,11 @@ const moreExtraWords = [
         for (let i = 0; i < 5; i++) stars += (i < Math.round(score / total * 5)) ? '⭐' : '☆';
         document.getElementById('stars').textContent = stars;
 
-        if (percent >= 90) confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+        if (percent >= 90) {
+            try {
+                confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+            } catch(e) {}
+        }
     }
 
     document.getElementById('restart-button').onclick = () => {
@@ -922,10 +931,3 @@ const moreExtraWords = [
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
