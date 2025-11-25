@@ -23,7 +23,7 @@
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #87CEEB, #E0F7FA);
             min-height: 100vh;
-            padding: 20px 10px;
+            padding: 20px 10px 40px;
             position: relative;
             overflow-x: hidden;
         }
@@ -49,8 +49,8 @@
             pointer-events: none;
             animation: drift 25s linear infinite;
         }
-        .cloud:nth-child(1) { top: 10%; left: -10%; animation-duration: 35s; }
-        .cloud:nth-child(2) { top: 20%; right: -10%; animation-duration: 45s; font-size: 5rem; }
+        .cloud:nth-of-type(1) { top: 10%; left: -10%; animation-duration: 35s; }
+        .cloud:nth-of-type(2) { top: 20%; right: -10%; animation-duration: 45s; font-size: 5rem; }
 
         .container {
             background: rgba(255, 255, 255, 0.97);
@@ -136,6 +136,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            padding: 0 10px;
         }
 
         .choices button {
@@ -163,13 +165,13 @@
             background: linear-gradient(135deg, #2ECC71, #27AE60) !important;
             color: white;
             border-color: #27AE60;
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
 
         .choices button.incorrect {
             background: linear-gradient(135deg, #f44336, #d32f2f) !important;
             color: white;
-            transform: scale(0.95);
+            transform: scale(0.97);
         }
 
         #progress-bar {
@@ -201,6 +203,22 @@
             box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
         }
 
+        #words-input {
+            padding: 10px 14px;
+            font-size: 1.1em;
+            border-radius: 12px;
+            border: 2px solid #4A90E2;
+            width: 120px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .score-text {
+            font-size: 1.3em;
+            margin: 20px 0;
+            color: #34495e;
+        }
+
         /* Animaties */
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(-3deg); }
@@ -229,7 +247,7 @@
                 width: calc(50% - 20px);
                 margin: 8px 10px;
             }
-            #word-display { font-size: 2.5em; }
+            #word-display { font-size: 2.4em; }
             .choices button { 
                 padding: 18px; 
                 font-size: 1.15em; 
@@ -240,6 +258,7 @@
             .container { padding: 30px 20px; border-radius: 25px; }
             .big-button { width: 100%; margin: 10px 0; }
             .header-photo { max-width: 260px; }
+            #word-display { font-size: 2em; }
         }
     </style>
 </head>
@@ -251,35 +270,309 @@
     <img src="https://raw.githubusercontent.com/marceleenenaam-hue/Pake-en-oma-leren-Engels/main/images/pake-inge-vakantie.jpg" 
          alt="Pake Jan & Oma Inge op vakantie" class="header-photo">
 
+    <!-- SETUP SCHERM -->
     <div id="setup-screen" class="container">
         <h1>Pake Jan & Oma Inge<br>op vakantie!</h1>
         <div class="emoji-big">✈️🌴☀️🏖️</div>
         <p class="subtitle">Leren Engels was nog nooit zo leuk!</p>
 
         <p style="font-size:1.3em; margin:20px 0 10px;">Welke kant wil je oefenen?</p>
-        <div>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center;">
             <button class="big-button" id="mode-en-nl">Engels ➜ Nederlands</button>
             <button class="big-button" id="mode-nl-en">Nederlands ➜ Engels</button>
         </div>
 
         <p style="font-size:1.3em; margin:25px 0 10px;">Hoeveel woorden wil je oefenen?</p>
-        <input type="number" id="words-input" min="1" placeholder="20" value="20">
+        <input type="number" id="words-input" min="0" placeholder="20" value="20">
         
         <div class="word-count-badge">
-            📚 Totaal: <span id="total-words">199</span> vakantiewoorden!
+            📚 Totaal: <span id="total-words">0</span> vakantiewoorden!
         </div>
         
-        <p style="margin:15px 0; color:#555;">Laat leeg of vul 0 voor <strong>alle</strong> woorden!</p>
+        <p style="margin:15px 0; color:#555;">Laat leeg of vul 0 in voor <strong>alle</strong> woorden!</p>
         
         <button class="big-button" id="start-button" style="background:linear-gradient(135deg,#FFD700,#FF8C42); font-size:1.5em; padding:20px 40px;">
             Start de vakantiequiz! 🎉
         </button>
     </div>
 
-    <!-- De rest van je quiz-schermen blijven precies hetzelfde als in mijn vorige versie -->
-    <!-- (quiz-screen, end-screen, en alle JavaScript) -->
+    <!-- QUIZ SCHERM -->
+    <div id="quiz-screen" class="container" style="display:none;">
+        <h1>Vakantiequiz</h1>
+        <p class="subtitle" id="mode-label">Engels ➜ Nederlands</p>
 
-    <!-- Ik plak hier alleen de verbeterde delen, de volledige werkende code met alle 199 woorden en de volledige JavaScript stuur ik je hieronder als complete versie -->
+        <div id="progress-bar">
+            <div id="progress-fill"></div>
+        </div>
 
+        <div id="word-display">Woord</div>
+
+        <div class="choices" id="choices-container">
+            <!-- Knoppen worden via JS gevuld -->
+        </div>
+
+        <p class="score-text">
+            Vraag <span id="current-number">0</span> van <span id="total-number">0</span> •
+            Goed: <span id="correct-count">0</span>
+        </p>
+    </div>
+
+    <!-- EINDSCHERM -->
+    <div id="end-screen" class="container" style="display:none;">
+        <h1>Goed gedaan! 🎉</h1>
+        <div class="emoji-big">🏆🌞</div>
+        <p class="score-text" id="final-score-text"></p>
+        <p style="margin:15px 0; color:#555;" id="extra-text"></p>
+
+        <button class="big-button" id="again-button" style="background:linear-gradient(135deg,#4A90E2,#357ABD);">
+            Nog een keer spelen!
+        </button>
+        <button class="big-button" id="back-button" style="background:linear-gradient(135deg,#2ECC71,#27AE60);">
+            Terug naar begin
+        </button>
+    </div>
+
+    <script>
+        // ====== DATASET MET VAKANTIEWOORDEN ======
+        // Voorbeeldset (~40). Je kunt deze lijst uitbreiden tot 199 of meer.
+        const words = [
+            { en: "airport", nl: "luchthaven" },
+            { en: "suitcase", nl: "koffer" },
+            { en: "passport", nl: "paspoort" },
+            { en: "ticket", nl: "ticket" },
+            { en: "plane", nl: "vliegtuig" },
+            { en: "train", nl: "trein" },
+            { en: "bus", nl: "bus" },
+            { en: "hotel", nl: "hotel" },
+            { en: "apartment", nl: "appartement" },
+            { en: "reservation", nl: "reservering" },
+            { en: "key", nl: "sleutel" },
+            { en: "beach", nl: "strand" },
+            { en: "sea", nl: "zee" },
+            { en: "sun", nl: "zon" },
+            { en: "swimming pool", nl: "zwembad" },
+            { en: "towel", nl: "handdoek" },
+            { en: "sunscreen", nl: "zonnebrandcrème" },
+            { en: "sunglasses", nl: "zonnebril" },
+            { en: "hat", nl: "hoed" },
+            { en: "flip-flops", nl: "slippers" },
+            { en: "map", nl: "kaart" },
+            { en: "restaurant", nl: "restaurant" },
+            { en: "menu", nl: "menu" },
+            { en: "breakfast", nl: "ontbijt" },
+            { en: "lunch", nl: "lunch" },
+            { en: "dinner", nl: "avondeten" },
+            { en: "water", nl: "water" },
+            { en: "ice cream", nl: "ijsje" },
+            { en: "bill", nl: "rekening" },
+            { en: "toilet", nl: "toilet" },
+            { en: "left", nl: "links" },
+            { en: "right", nl: "rechts" },
+            { en: "straight ahead", nl: "rechtdoor" },
+            { en: "bank", nl: "bank" },
+            { en: "money", nl: "geld" },
+            { en: "market", nl: "markt" },
+            { en: "shop", nl: "winkel" },
+            { en: "pharmacy", nl: "apotheek" },
+            { en: "doctor", nl: "dokter" },
+            { en: "emergency", nl: "noodgeval" }
+        ];
+
+        // ====== ELEMENTEN ======
+        const setupScreen = document.getElementById('setup-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const endScreen = document.getElementById('end-screen');
+
+        const modeEnNlBtn = document.getElementById('mode-en-nl');
+        const modeNlEnBtn = document.getElementById('mode-nl-en');
+        const startButton = document.getElementById('start-button');
+        const wordsInput = document.getElementById('words-input');
+        const totalWordsSpan = document.getElementById('total-words');
+
+        const modeLabel = document.getElementById('mode-label');
+        const wordDisplay = document.getElementById('word-display');
+        const choicesContainer = document.getElementById('choices-container');
+        const progressFill = document.getElementById('progress-fill');
+        const currentNumberSpan = document.getElementById('current-number');
+        const totalNumberSpan = document.getElementById('total-number');
+        const correctCountSpan = document.getElementById('correct-count');
+
+        const finalScoreText = document.getElementById('final-score-text');
+        const extraText = document.getElementById('extra-text');
+        const againButton = document.getElementById('again-button');
+        const backButton = document.getElementById('back-button');
+
+        // Toon totaal aantal woorden
+        totalWordsSpan.textContent = words.length;
+
+        // ====== STATE ======
+        let mode = 'en-nl';  // of 'nl-en'
+        let quizWords = [];
+        let currentIndex = 0;
+        let correctCount = 0;
+        let answered = false;
+
+        // ====== HULPFUNCTIES ======
+        function shuffle(array) {
+            const arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startConfetti() {
+            if (typeof confetti !== 'function') return;
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function createQuestion() {
+            answered = false;
+            const item = quizWords[currentIndex];
+
+            const questionWord = mode === 'en-nl' ? item.en : item.nl;
+            const correctAnswer = mode === 'en-nl' ? item.nl : item.en;
+
+            wordDisplay.textContent = questionWord;
+
+            // Kies 3 andere willekeurige opties
+            let others = shuffle(words.filter(w => w !== item));
+            others = others.slice(0, 3);
+            const options = [correctAnswer, ...others.map(o => mode === 'en-nl' ? o.nl : o.en)];
+            const shuffled = shuffle(options);
+
+            // Bouw knoppen
+            choicesContainer.innerHTML = '';
+            shuffled.forEach(text => {
+                const btn = document.createElement('button');
+                btn.textContent = text;
+                btn.addEventListener('click', () => handleChoice(btn, text === correctAnswer));
+                choicesContainer.appendChild(btn);
+            });
+
+            currentNumberSpan.textContent = currentIndex + 1;
+            totalNumberSpan.textContent = quizWords.length;
+            correctCountSpan.textContent = correctCount;
+
+            const progress = ((currentIndex) / quizWords.length) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        function handleChoice(button, isCorrect) {
+            if (answered) return;
+            answered = true;
+
+            if (isCorrect) {
+                correctCount++;
+                button.classList.add('correct');
+                startConfetti();
+            } else {
+                button.classList.add('incorrect');
+                // Markeer correcte knop ook
+                [...choicesContainer.children].forEach(b => {
+                    if (!b.classList.contains('incorrect')) {
+                        // Kijk of tekst overeenkomt met juiste antwoord
+                        const item = quizWords[currentIndex];
+                        const correctAnswer = mode === 'en-nl' ? item.nl : item.en;
+                        if (b.textContent === correctAnswer) {
+                            b.classList.add('correct');
+                        }
+                    }
+                });
+            }
+
+            correctCountSpan.textContent = correctCount;
+
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex >= quizWords.length) {
+                    finishQuiz();
+                } else {
+                    createQuestion();
+                }
+            }, 900);
+        }
+
+        function finishQuiz() {
+            quizScreen.style.display = 'none';
+            endScreen.style.display = 'block';
+
+            const total = quizWords.length;
+            const scorePercent = Math.round((correctCount / total) * 100);
+
+            finalScoreText.textContent = `Je had ${correctCount} van de ${total} goed (${scorePercent}%).`;
+
+            let message;
+            if (scorePercent === 100) {
+                message = "Fantastisch, jullie zijn echte vakantie‑toppers! 🌟";
+            } else if (scorePercent >= 80) {
+                message = "Heel goed gedaan, klaar voor de reis! ✈️";
+            } else if (scorePercent >= 50) {
+                message = "Mooi begin, nog een rondje en jullie zijn er helemaal klaar voor! 😄";
+            } else {
+                message = "Iedere reis begint met de eerste stap. Nog een keertje proberen? 🚶‍♂️🚶‍♀️";
+            }
+            extraText.textContent = message;
+
+            startConfetti();
+        }
+
+        function resetQuizState() {
+            quizWords = [];
+            currentIndex = 0;
+            correctCount = 0;
+            progressFill.style.width = '0%';
+        }
+
+        // ====== EVENT LISTENERS ======
+        modeEnNlBtn.addEventListener('click', () => {
+            mode = 'en-nl';
+            modeEnNlBtn.style.opacity = '1';
+            modeNlEnBtn.style.opacity = '0.7';
+        });
+        modeNlEnBtn.addEventListener('click', () => {
+            mode = 'nl-en';
+            modeNlEnBtn.style.opacity = '1';
+            modeEnNlBtn.style.opacity = '0.7';
+        });
+
+        startButton.addEventListener('click', () => {
+            resetQuizState();
+
+            let count = parseInt(wordsInput.value, 10);
+            if (isNaN(count) || count <= 0 || count > words.length) {
+                count = words.length;
+            }
+
+            quizWords = shuffle(words).slice(0, count);
+
+            modeLabel.textContent = mode === 'en-nl' ? 'Engels ➜ Nederlands' : 'Nederlands ➜ Engels';
+
+            setupScreen.style.display = 'none';
+            endScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+
+            createQuestion();
+        });
+
+        againButton.addEventListener('click', () => {
+            // zelfde instellingen opnieuw
+            resetQuizState();
+            quizScreen.style.display = 'block';
+            endScreen.style.display = 'none';
+            createQuestion();
+        });
+
+        backButton.addEventListener('click', () => {
+            endScreen.style.display = 'none';
+            quizScreen.style.display = 'none';
+            setupScreen.style.display = 'block';
+        });
+    </script>
 </body>
 </html>
