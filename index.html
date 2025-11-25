@@ -8,180 +8,484 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --sun: #ffdd00;
-            --sky: #87CEEB;
-            --green: #4CAF50;
-            --pink: #FF69B4;
-            --blue: #2196F3;
-            --orange: #FF9800;
+            --sand: #f5e6d3;
+            --ocean: #0077b6;
+            --ocean-light: #90e0ef;
+            --palm: #2d6a4f;
+            --sunset-orange: #f77f00;
+            --sunset-pink: #ff6b6b;
+            --sunset-yellow: #ffd166;
+            --coral: #ff7f50;
+            --white-transparent: rgba(255, 255, 255, 0.92);
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            /* De oorspronkelijke lichte achtergrond */
-            background: linear-gradient(135deg, var(--sky) 0%, #e0f7fa 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
-            box-sizing: border-box;
+            padding: 15px;
+            
+            /* Achtergrondafbeelding van GitHub */
+            background-image: url('https://raw.githubusercontent.com/JOUW-USERNAME/JOUW-REPO/main/pake-inge-vakantie.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
+            /* Fallback gradient als de afbeelding niet laadt */
+            background-color: var(--ocean-light);
         }
+
+        /* Overlay voor betere leesbaarheid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 119, 182, 0.3) 0%,
+                rgba(255, 209, 102, 0.2) 50%,
+                rgba(255, 107, 107, 0.3) 100%
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--white-transparent);
             padding: 30px 25px;
-            border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-radius: 25px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 4px rgba(255, 255, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
             max-width: 620px;
             width: 100%;
             text-align: center;
             position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             overflow: hidden;
         }
+
+        /* Decoratieve vakantie-elementen */
+        .container::before {
+            content: '🌴';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 2em;
+            opacity: 0.6;
+        }
+
+        .container::after {
+            content: '☀️';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2em;
+            opacity: 0.6;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         h1 {
             font-family: 'Fredoka One', cursive;
-            font-size: 2.4em;
-            color: var(--orange);
-            margin: 0 0 15px 0;
+            font-size: 2.2em;
+            background: linear-gradient(135deg, var(--sunset-orange), var(--coral), var(--sunset-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 10px 0 15px 0;
+            text-shadow: none;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
         }
+
         h2 {
             font-family: 'Fredoka One', cursive;
-            color: var(--blue);
+            color: var(--ocean);
+            font-size: 1.5em;
+            margin: 10px 0;
         }
-        .emoji-big { font-size: 3.5em; margin: 10px 0; }
+
+        .emoji-big { 
+            font-size: 3em; 
+            margin: 15px 0;
+            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.2));
+        }
 
         .hidden { display: none; }
 
-        /* Start-scherm */
+        /* Vakantie-themed invoerveld */
         #words-input {
-            font-size: 1.8em;
-            width: 90px;
+            font-size: 1.6em;
+            width: 100px;
             padding: 12px;
             text-align: center;
-            border: 4px solid var(--pink);
+            border: 3px solid var(--ocean);
             border-radius: 15px;
             margin: 0 10px;
-        }
-        .big-button {
-            background: var(--pink);
-            color: white;
-            border: none;
-            padding: 18px 30px;
-            margin: 15px 8px;
-            border-radius: 50px;
-            font-size: 1.4em;
+            background: linear-gradient(to bottom, #fff, var(--sand));
+            color: var(--ocean);
             font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-        }
-        .big-button:hover { transform: scale(1.08); }
-        .big-button:active { transform: scale(0.98); }
-
-        /* Quiz-scherm */
-        #word-display {
-            font-family: 'Fredoka One', cursive;
-            font-size: 3.5em;
-            color: var(--orange);
-            margin: 20px 0;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        }
-        .speak-btn {
-            background: var(--green);
-            font-size: 1.5em;
-            padding: 16px 30px;
-        }
-        .choices button {
-            width: 100%;
-            padding: 18px;
-            margin: 12px 0;
-            font-size: 1.3em;
-            border-radius: 20px;
-            border: 4px solid var(--blue);
-            background: white;
-            color: var(--blue);
-            cursor: pointer;
             transition: all 0.3s;
         }
-        .choices button:hover { background: #e3f2fd; transform: translateY(-4px); }
-        .choices button.correct { background: var(--green) !important; color: white; border-color: var(--green); }
-        .choices button.incorrect { background: #f44336 !important; color: white; border-color: #f44336; }
 
-        #feedback { font-size: 1.6em; font-weight: bold; margin: 20px 0; min-height: 50px; }
+        #words-input:focus {
+            outline: none;
+            border-color: var(--sunset-orange);
+            box-shadow: 0 0 15px rgba(247, 127, 0, 0.4);
+            transform: scale(1.05);
+        }
 
+        /* Vakantie-stijl knoppen */
+        .big-button {
+            background: linear-gradient(135deg, var(--sunset-orange), var(--coral));
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            margin: 10px 6px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 
+                0 6px 20px rgba(247, 127, 0, 0.4),
+                0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .big-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .big-button:hover::before {
+            left: 100%;
+        }
+
+        .big-button:hover { 
+            transform: translateY(-3px) scale(1.03); 
+            box-shadow: 0 10px 30px rgba(247, 127, 0, 0.5);
+        }
+
+        .big-button:active { 
+            transform: translateY(0) scale(0.98); 
+        }
+
+        /* Mode knoppen met vakantie-thema */
+        #mode-en-nl {
+            background: linear-gradient(135deg, var(--ocean), #00a8e8);
+        }
+
+        #mode-nl-en {
+            background: linear-gradient(135deg, var(--palm), #40916c);
+        }
+
+        /* Quiz-scherm styling */
+        #word-display {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.8em;
+            background: linear-gradient(135deg, var(--ocean), var(--palm));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 20px;
+            background-color: rgba(144, 224, 239, 0.2);
+            border: 3px dashed var(--ocean-light);
+        }
+
+        .speak-btn {
+            background: linear-gradient(135deg, var(--palm), #52b788) !important;
+            font-size: 1.3em;
+            padding: 14px 28px;
+        }
+
+        .speak-btn::after {
+            content: ' 🔊';
+        }
+
+        /* Antwoordknoppen met strand-thema */
+        .choices button {
+            width: 100%;
+            padding: 16px;
+            margin: 10px 0;
+            font-size: 1.2em;
+            border-radius: 20px;
+            border: 3px solid var(--ocean);
+            background: linear-gradient(to bottom, #fff, rgba(144, 224, 239, 0.3));
+            color: var(--ocean);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choices button:hover { 
+            background: linear-gradient(to bottom, var(--ocean-light), rgba(144, 224, 239, 0.5));
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 119, 182, 0.3);
+        }
+
+        .choices button.correct { 
+            background: linear-gradient(135deg, var(--palm), #52b788) !important; 
+            color: white; 
+            border-color: var(--palm);
+            animation: celebrate 0.5s ease;
+        }
+
+        .choices button.incorrect { 
+            background: linear-gradient(135deg, #e63946, #ff6b6b) !important; 
+            color: white; 
+            border-color: #e63946;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #feedback { 
+            font-size: 1.4em; 
+            font-weight: bold; 
+            margin: 15px 0; 
+            min-height: 45px;
+            color: var(--ocean);
+        }
+
+        /* Voortgangsbalk met zonsondergang-gradient */
         #progress-bar {
-            height: 20px;
-            background: #ddd;
+            height: 18px;
+            background: rgba(0, 119, 182, 0.2);
             border-radius: 10px;
             overflow: hidden;
-            margin: 20px 0;
+            margin: 15px 0;
+            border: 2px solid var(--ocean-light);
         }
+
         #progress-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--green), var(--sun));
+            background: linear-gradient(90deg, var(--ocean), var(--ocean-light), var(--sunset-yellow), var(--sunset-orange));
             transition: width 0.6s ease;
+            border-radius: 10px;
         }
 
-        /* Eindscherm */
-        .stars { font-size: 3em; letter-spacing: 10px; margin: 20px 0; }
-        .score-text { font-size: 2em; color: var(--orange); }
+        #progress-info {
+            font-size: 1em;
+            color: var(--ocean);
+            font-weight: 600;
+        }
 
-        /* Kleine extra animaties */
+        /* Eindscherm styling */
+        .stars { 
+            font-size: 2.5em; 
+            letter-spacing: 8px; 
+            margin: 15px 0;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .score-text { 
+            font-size: 1.6em; 
+            color: var(--sunset-orange);
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        #restart-button {
+            background: linear-gradient(135deg, var(--sunset-pink), var(--coral)) !important;
+        }
+
+        /* Responsieve aanpassingen */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+                border-radius: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+
+            .emoji-big {
+                font-size: 2.2em;
+            }
+
+            #word-display {
+                font-size: 2em;
+                padding: 10px;
+            }
+
+            .big-button {
+                padding: 14px 20px;
+                font-size: 1em;
+                margin: 8px 4px;
+            }
+
+            .choices button {
+                padding: 14px;
+                font-size: 1.05em;
+            }
+
+            #words-input {
+                font-size: 1.4em;
+                width: 80px;
+                padding: 10px;
+            }
+
+            .container::before,
+            .container::after {
+                font-size: 1.5em;
+            }
+
+            #feedback {
+                font-size: 1.2em;
+            }
+
+            .stars {
+                font-size: 2em;
+                letter-spacing: 5px;
+            }
+
+            .score-text {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.4em;
+            }
+
+            #word-display {
+                font-size: 1.6em;
+            }
+
+            .big-button {
+                padding: 12px 16px;
+                font-size: 0.95em;
+            }
+        }
+
+        /* Extra vakantie-decoratie */
+        .vacation-decoration {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            opacity: 0.5;
+        }
+
+        /* Animatie voor bounce effect */
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
         }
-        .bounce { animation: bounce 0.6s; }
+
+        .bounce { 
+            animation: bounce 0.6s ease; 
+        }
+
+        /* Tekst styling */
+        p {
+            color: #444;
+            line-height: 1.5;
+        }
+
+        strong, b {
+            color: var(--ocean);
+        }
     </style>
 </head>
 <body>
 
 <div id="setup-screen" class="container">
-    <h1>Pake Jan & Oma Inge op vakantie</h1>
-    <div class="emoji-big">✈️🌴☀️</div>
+    <h1>🏖️ Pake Jan & Oma Inge op vakantie ✈️</h1>
+    <div class="emoji-big">🌊🌴☀️</div>
 
-    <p style="font-size:1.2em; margin-bottom:8px;">Welke kant wil je oefenen?</p>
+    <p style="font-size:1.15em; margin-bottom:8px;">Welke kant wil je oefenen?</p>
     <div style="margin-bottom:15px;">
-        <button class="big-button" id="mode-en-nl" style="background: var(--blue);">
-            Engels ➜ Nederlands
+        <button class="big-button" id="mode-en-nl">
+            🇬🇧 Engels ➜ Nederlands 🇳🇱
         </button>
-        <button class="big-button" id="mode-nl-en" style="background: var(--green);">
-            Nederlands ➜ Engels
+        <button class="big-button" id="mode-nl-en">
+            🇳🇱 Nederlands ➜ Engels 🇬🇧
         </button>
     </div>
 
-    <p style="font-size:1.3em;">Hoeveel woorden wil je oefenen?</p>
+    <p style="font-size:1.2em;">Hoeveel woorden wil je oefenen?</p>
     <div style="margin:15px 0;">
         <input type="number" id="words-input" min="1" placeholder="15" value="15">
     </div>
-    <p>Laat leeg of vul 0 in voor <b>alle</b> woorden! (Nu ${allQuestionsFinal.length} stuks)</p>
-    <button class="big-button" id="start-button">Start de quiz!</button>
+    <p style="font-size:0.95em;">Laat leeg of vul 0 in voor <b>alle</b> woorden! 📚</p>
+    <button class="big-button" id="start-button">🚀 Start de quiz!</button>
+    <div class="vacation-decoration">🐚 🦀 🐠</div>
 </div>
 
 <div id="quiz-screen" class="container hidden">
-    <h2 id="quiz-title">Engelse vakantie-woorden</h2>
+    <h2 id="quiz-title">🌍 Engelse vakantie-woorden</h2>
     <div id="progress-bar"><div id="progress-fill"></div></div>
-    <div id="progress-info" style="font-size:1.1em; color:#555;">Vraag 1 van 15</div>
+    <div id="progress-info">Vraag 1 van 15</div>
 
     <div id="word-display">...</div>
     <button id="speak-button" class="big-button speak-btn">Spreek uit</button>
 
     <div class="choices" id="choices-container"></div>
     <div id="feedback"></div>
-    <button id="next-button" class="big-button hidden" style="background:var(--orange);">Volgende</button>
+    <button id="next-button" class="big-button hidden">➡️ Volgende</button>
+    <div class="vacation-decoration">🏝️ 🌺 🍹</div>
 </div>
 
 <div id="end-screen" class="container hidden">
-    <h1>Goed gedaan!</h1>
-    <div class="emoji-big">🎉🏆</div>
+    <h1>🎊 Goed gedaan! 🎊</h1>
+    <div class="emoji-big">🏆🌟🎉</div>
     <div class="score-text" id="score-display"></div>
     <div class="stars" id="stars"></div>
-    <button class="big-button" style="background:var(--pink);" id="restart-button">Nog een keer spelen!</button>
-    <button class="big-button" style="background:#999;"
+    <button class="big-button" id="restart-button">🔄 Nog een keer spelen!</button>
+    <button class="big-button" style="background: linear-gradient(135deg, #6c757d, #495057) !important;"
         onclick="document.getElementById('setup-screen').classList.remove('hidden'); document.getElementById('end-screen').classList.add('hidden');">
-        Ander aantal woorden kiezen
+        ⚙️ Andere instellingen
     </button>
+    <div class="vacation-decoration">🌈 🦋 🌸</div>
 </div>
 
 <script>
@@ -320,6 +624,10 @@
 
     const allQuestionsFinal = [...allQuestions, ...extraWords, ...moreExtraWords];
 
+    // Update de tekst met het totale aantal woorden
+    document.querySelector('#setup-screen p:last-of-type').innerHTML = 
+        `Laat leeg of vul 0 in voor <b>alle</b> woorden! (Nu ${allQuestionsFinal.length} stuks) 📚`;
+
     // ------------------------------
     // STATE & DOM
     // ------------------------------
@@ -341,12 +649,14 @@
     // Modus kiezen
     modeEnNlBtn.onclick = () => {
         mode = "EN_NL";
-        modeEnNlBtn.style.outline = "4px solid #000";
+        modeEnNlBtn.style.outline = "4px solid var(--sunset-yellow)";
+        modeEnNlBtn.style.outlineOffset = "2px";
         modeNlEnBtn.style.outline = "none";
     };
     modeNlEnBtn.onclick = () => {
         mode = "NL_EN";
-        modeNlEnBtn.style.outline = "4px solid #000";
+        modeNlEnBtn.style.outline = "4px solid var(--sunset-yellow)";
+        modeNlEnBtn.style.outlineOffset = "2px";
         modeEnNlBtn.style.outline = "none";
     };
 
@@ -363,10 +673,10 @@
 
         // Titel en spreek-knop afhankelijk van modus
         if (mode === "EN_NL") {
-            quizTitle.textContent = "Engels ➜ Nederlands";
+            quizTitle.textContent = "🇬🇧 Engels ➜ Nederlands 🇳🇱";
             speakButton.classList.remove('hidden');
         } else {
-            quizTitle.textContent = "Nederlands ➜ Engels";
+            quizTitle.textContent = "🇳🇱 Nederlands ➜ Engels 🇬🇧";
             speakButton.classList.add('hidden'); // geen uitspraak in NL -> EN modus
         }
 
@@ -466,7 +776,7 @@
         if (correct) {
             score++;
             btn.classList.add('correct');
-            document.getElementById('feedback').innerHTML = 'Super! Goed zo! 🎉';
+            document.getElementById('feedback').innerHTML = '🎉 Super! Goed zo! 🌟';
             new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav').play();
 
             // DIRECT DOORGAAN BIJ GOED (functionaliteit behouden)
@@ -477,7 +787,7 @@
 
         } else {
             btn.classList.add('incorrect');
-            document.getElementById('feedback').innerHTML = `Bijna! Het was: <strong>${rightAnswer}</strong> 😢`;
+            document.getElementById('feedback').innerHTML = `😢 Bijna! Het was: <strong>${rightAnswer}</strong>`;
             new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-932.wav').play();
             document.querySelectorAll('#choices-container button').forEach(b => {
                 if (b.textContent === rightAnswer) b.classList.add('correct');
