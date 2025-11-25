@@ -26,7 +26,6 @@
         overflow-x: hidden;
         transition: background 1s ease;
     }
-    /* Dag/nacht achtergrond animatie */
     body.night {
         background: linear-gradient(135deg, #001848 0%, #004f91 100%);
     }
@@ -284,15 +283,7 @@
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
     }
     .word-count-badge {
-        background: linear-gradient(135deg, #2ECC71, #27AE60);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 30px;
-        font-weight: bold;
-        display: inline-block;
-        margin: 15px 0;
-        font-size: 1.2em;
-        box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        display: none;
     }
     .hidden { display: none !important;}
     .score-display {
@@ -354,7 +345,6 @@
         color: #A2BEFF;
     }
     .footer-emoji { font-size: 2em; margin: 0 6px;}
-    /* Dag / nacht toggle knop */
     #toggle-theme {
         position: fixed;
         top: 15px;
@@ -374,7 +364,6 @@
     #toggle-theme:hover {
         background: #FF3B3B;
     }
-    /* Animations */
     @keyframes float {
         0%, 100% { transform: translateY(0) rotate(-3deg);}
         50% { transform: translateY(-15px) rotate(3deg);}
@@ -392,7 +381,6 @@
         25% { transform: translateX(-10px);}
         75% { transform: translateX(10px);}
     }
-    /* Responsive */
     @media (max-width: 768px) {
         .header-photo{max-width:300px; border-width:6px;}
         h1{font-size:2.2em;}
@@ -419,7 +407,6 @@
 </style>
 </head>
 <body>
-<!-- Toggle Dark Mode -->
 <button id="toggle-theme" aria-label="Thema wisselen">🌙</button>
 
 <div class="cloud">☁️</div>
@@ -429,7 +416,6 @@
 
 <img src="https://raw.githubusercontent.com/marceleenenaam-hue/Pake-en-oma-leren-Engels/main/images/pake-inge-vakantie.jpg" alt="Pake Jan & Oma Inge op vakantie" class="header-photo" onerror="this.style.display='none'" />
 
-<!-- Setup -->
 <div id="setup-screen" class="container">
     <h1>Pake Jan & Oma Inge<br>op vakantie!</h1>
     <div class="emoji-big">✈️🌴☀️🏖️</div>
@@ -452,13 +438,11 @@
     </div>
     <p style="font-size:1.3em; margin:25px 0 10px; font-weight:600;">Hoeveel woorden wil je oefenen?</p>
     <input type="number" id="words-input" min="0" max="100" placeholder="20" value="20" />
-    <div class="word-count-badge">📚 Totaal: <span id="total-words">100</span> vakantiewoorden!</div>
     <p style="margin:15px 0;color:#555;">💡 Tip: Vul 0 in voor <strong>alle</strong> woorden!</p>
     <button class="big-button" id="start-button" style="background:linear-gradient(135deg,#FFD700,#FF8C42);font-size:1.5em;padding:20px 40px;width:auto;margin-top:20px;">🚀 Start de vakantiequiz!</button>
 </div>
 
-<!-- Quiz -->
-<div id="quiz-screen" class="container">
+<div id="quiz-screen" class="container hidden">
     <div id="progress-bar"><div id="progress-fill"></div></div>
     <p class="question-indicator">Vraag <span id="question-number">1</span> van <span id="total-questions">20</span></p>
     <div id="word-display">
@@ -471,7 +455,6 @@
     <div class="choices" id="choices-container"></div>
 </div>
 
-<!-- End -->
 <div id="end-screen" class="container hidden">
     <h1>🎊 Gefeliciteerd! 🎊</h1>
     <div class="emoji-big">🏆🌟✨</div>
@@ -500,62 +483,66 @@
   const vocabulary = [
     // Thema: Strand & Zee
     {en:"holiday", nl:["vakantie","feestdag","recreatie","zomer"], sentence:"We're planning a holiday to the beach next month.", theme:"beach"},
-    {en:"beach", nl:["strand","vulkaan","berg","bos"], sentence:"The beach was crowded with tourists.", theme:"beach"},
-    {en:"sun", nl:["zon","maan","ster","wolk"], sentence:"The sun was shining bright all day.", theme:"beach"},
-    {en:"sea", nl:["zee","rivier","meer","zwembad"], sentence:"We swam in the clear blue sea.", theme:"beach"},
-    {en:"palm tree", nl:["palmboom","dennenboom","eik","berk"], sentence:"Palm trees lined the sandy shore.", theme:"beach"},
-    {en:"sunset", nl:["zonsondergang","zonsopkomst","avond","morgen"], sentence:"We watched a beautiful sunset over the ocean.", theme:"beach"},
-    {en:"island", nl:["eiland","berg","strand","rivier"], sentence:"They stayed on a remote island for a week.", theme:"beach"},
-    {en:"swimming", nl:["zwemmen","lopen","rennen","vliegen"], sentence:"Swimming in the sea is refreshing.", theme:"beach"},
-    {en:"sandcastle", nl:["zandkasteel","huis","tent","boot"], sentence:"The children built a huge sandcastle.", theme:"beach"},
-    {en:"surfing", nl:["surfen","zwemmen","vissen","klimmen"], sentence:"She is learning how to surf.", theme:"beach"},
+    {en:"shore", nl:["kust","heuvel","rivier","bos"], sentence:"We walked along the rocky shore.", theme:"beach"},
+    {en:"sun", nl:["zon","maan","ster","wolk"], sentence:"The sun set late in the evening.", theme:"beach"},
+    {en:"ocean", nl:["oceaan","meer","rivier","zwembad"], sentence:"The ocean waves are very strong.", theme:"beach"},
+    {en:"palm tree", nl:["palmboom","dennenboom","eik","berk"], sentence:"The palm trees swayed in the wind.", theme:"beach"},
+    {en:"sunset", nl:["zonsondergang","zonsopkomst","avond","morgen"], sentence:"The sunset was breathtaking.", theme:"beach"},
+    {en:"island", nl:["eiland","berg","strand","rivier"], sentence:"They stayed on a small island.", theme:"beach"},
+    {en:"snorkeling", nl:["snorkelen","zwemmen","duiken","varen"], sentence:"Snorkeling allows you to see fish underwater.", theme:"beach"},
+    {en:"seashell", nl:["schelp","steen","hout","klei"], sentence:"She collected seashells along the shore.", theme:"beach"},
+    {en:"lifeguard", nl:["strandwacht","badmeester","barman","kok"], sentence:"The lifeguard watched the swimmers carefully.", theme:"beach"},
+
     // Thema: Reizen & Vervoer
-    {en:"airport", nl:["vliegveld","station","haven","plein"], sentence:"We arrived early at the airport.", theme:"travel"},
-    {en:"flight", nl:["vlucht","reis","trein","auto"], sentence:"Our flight was delayed by two hours.", theme:"travel"},
-    {en:"passport", nl:["paspoort","kaart","ticket","identiteitsbewijs"], sentence:"Don't forget your passport when traveling.", theme:"travel"},
-    {en:"ticket", nl:["ticket","bewijs","kaart","voucher"], sentence:"She bought a ticket to London.", theme:"travel"},
+    {en:"airport", nl:["vliegveld","station","haven","plein"], sentence:"They arrived at the airport two hours early.", theme:"travel"},
+    {en:"flight", nl:["vlucht","reis","trein","auto"], sentence:"The flight was smooth and quiet.", theme:"travel"},
+    {en:"passport", nl:["paspoort","kaart","bewijs","identiteitsbewijs"], sentence:"Always carry your passport when traveling abroad.", theme:"travel"},
+    {en:"ticket", nl:["ticket","bewijs","kaart","voucher"], sentence:"I bought a ticket to Paris.", theme:"travel"},
     {en:"taxi", nl:["taxi","bus","auto","fiets"], sentence:"We took a taxi to the hotel.", theme:"travel"},
-    {en:"train", nl:["trein","bus","auto","vliegtuig"], sentence:"The train was very comfortable.", theme:"travel"},
-    {en:"boarding pass", nl:["instapkaart","ticket","bewijs","kaart"], sentence:"Show your boarding pass at the gate.", theme:"travel"},
-    {en:"customs", nl:["douane","controle","politie","beveiliging"], sentence:"We waited in line at customs.", theme:"travel"},
-    {en:"baggage claim", nl:["bagageband","koffer","tas","station"], sentence:"The luggage was on the baggage claim carousel.", theme:"travel"},
-    {en:"metro", nl:["metro","bus","trein","tram"], sentence:"The metro station is near the hotel.", theme:"travel"},
+    {en:"train", nl:["trein","bus","auto","vliegtuig"], sentence:"The train ride took three hours.", theme:"travel"},
+    {en:"luggage", nl:["bagage","tas","koffer","rugzak"], sentence:"He packed his luggage carefully.", theme:"travel"},
+    {en:"customs", nl:["douane","controle","politie","beveiliging"], sentence:"We went through customs without problems.", theme:"travel"},
+    {en:"boarding gate", nl:["instapgate","uitgang","deur","trap"], sentence:"Our flight leaves from boarding gate 5.", theme:"travel"},
+    {en:"itinerary", nl:["reisschema","tijdschema","lijst","map"], sentence:"The itinerary includes visits to several cities.", theme:"travel"},
+
     // Thema: Eten & Drinken
-    {en:"restaurant", nl:["restaurant","winkel","café","markt"], sentence:"We had dinner at a local restaurant.", theme:"food"},
-    {en:"menu", nl:["menu","boek","lijst","gids"], sentence:"The menu included many seafood dishes.", theme:"food"},
-    {en:"breakfast", nl:["ontbijt","lunch","diner","snack"], sentence:"Breakfast is served from 7 to 10 AM.", theme:"food"},
-    {en:"juice", nl:["sap","melk","water","thee"], sentence:"I drank fresh orange juice.", theme:"food"},
-    {en:"coffee", nl:["koffie","thee","soda","sap"], sentence:"Coffee is my favorite morning drink.", theme:"food"},
-    {en:"ice cream", nl:["ijsje","taart","koek","chocolade"], sentence:"The ice cream melted quickly in the sun.", theme:"food"},
-    {en:"cocktail", nl:["cocktail","bier","wijn","whiskey"], sentence:"We enjoyed cool cocktails on the terrace.", theme:"food"},
-    {en:"fruit", nl:["fruit","groente","vlees","vis"], sentence:"Fresh fruit is healthy and delicious.", theme:"food"},
-    {en:"water", nl:["water","melk","sap","koffie"], sentence:"Remember to drink plenty of water.", theme:"food"},
-    {en:"beer", nl:["bier","wijn","cola","sap"], sentence:"They ordered a cold beer after swimming.", theme:"food"},
+    {en:"restaurant", nl:["restaurant","café","winkel","studio"], sentence:"We had dinner at a cozy restaurant.", theme:"food"},
+    {en:"breakfast", nl:["ontbijt","lunch","diner","snack"], sentence:"Breakfast is the most important meal of the day.", theme:"food"},
+    {en:"juice", nl:["sap","melk","water","thee"], sentence:"I drank fresh apple juice.", theme:"food"},
+    {en:"coffee", nl:["koffie","thee","cola","sap"], sentence:"Coffee helps me wake up in the morning.", theme:"food"},
+    {en:"tea", nl:["thee","koffie","soda","water"], sentence:"Would you like some tea or coffee?", theme:"food"},
+    {en:"dessert", nl:["nagerecht","voorgerecht","hoofdgerecht","drank"], sentence:"The dessert was delicious and sweet.", theme:"food"},
+    {en:"barbecue", nl:["barbecue","picknick","feest","concert"], sentence:"We're having a barbecue this weekend.", theme:"food"},
+    {en:"fruit", nl:["fruit","groente","vlees","vis"], sentence:"Eating fruit is good for your health.", theme:"food"},
+    {en:"dinner", nl:["diner","lunch","ontbijt","snack"], sentence:"Dinner will be served at 7 PM.", theme:"food"},
+    {en:"waiter", nl:["ober","kok","gast","manager"], sentence:"The waiter brought our food quickly.", theme:"food"},
+
     // Thema: Accommodatie & Service
-    {en:"hotel", nl:["hotel","restaurant","winkel","station"], sentence:"The hotel has a pool and gym.", theme:"accommodation"},
-    {en:"room", nl:["kamer","hotel","huis","appartement"], sentence:"Our room has a lovely view of the sea.", theme:"accommodation"},
-    {en:"reception", nl:["receptie","kamer","restaurant","bar"], sentence:"We checked in at the reception desk.", theme:"accommodation"},
-    {en:"key", nl:["sleutel","kaart","boek","boekje"], sentence:"Don't forget to take your room key.", theme:"accommodation"},
-    {en:"pool", nl:["zwembad","meer","vijver","bad"], sentence:"The pool is open from 8 AM to 8 PM.", theme:"accommodation"},
-    {en:"wifi", nl:["wifi","internet","usb","kabel"], sentence:"Wifi is available in all hotel rooms.", theme:"accommodation"},
-    {en:"elevator", nl:["lift","trap","roltrap","deur"], sentence:"Take the elevator to the fifth floor.", theme:"accommodation"},
-    {en:"check-in", nl:["inchecken","uitchecken","aanmelden","vertrekken"], sentence:"Check-in starts at 3 PM.", theme:"accommodation"},
-    {en:"check-out", nl:["uitchecken","inchecken","vertrekken","aankomen"], sentence:"Please check out by noon.", theme:"accommodation"},
-    {en:"bathroom", nl:["badkamer","woonkamer","keuken","slaapkamer"], sentence:"The bathroom has a shower and bath.", theme:"accommodation"},
+    {en:"hotel", nl:["hotel","resort","gebouw","plek"], sentence:"The hotel has a wonderful view.", theme:"accommodation"},
+    {en:"room", nl:["kamer","appartement","huis","hotel"], sentence:"Our room is on the third floor.", theme:"accommodation"},
+    {en:"reception", nl:["receptie","bureau","kast","tafel"], sentence:"We checked in at the reception desk.", theme:"accommodation"},
+    {en:"key", nl:["sleutel","kaart","laptop","boek"], sentence:"Don't lose your room key.", theme:"accommodation"},
+    {en:"pool", nl:["zwembad","meer","vijver","bad"], sentence:"We spent the afternoon by the pool.", theme:"accommodation"},
+    {en:"wifi", nl:["wifi","internet","kabel","usb"], sentence:"The wifi password is available at reception.", theme:"accommodation"},
+    {en:"bathroom", nl:["badkamer","keuken","woonkamer","slaapkamer"], sentence:"The bathroom has a shower and a tub.", theme:"accommodation"},
+    {en:"elevator", nl:["lift","trap","roltrap","deur"], sentence:"Take the elevator to the lobby.", theme:"accommodation"},
+    {en:"check-in", nl:["inchecken","uitchecken","vertrekken","aankomen"], sentence:"Check-in starts at 3 PM.", theme:"accommodation"},
+    {en:"check-out", nl:["uitchecken","inchecken","lontrekken","aankomen"], sentence:"Please check out before noon.", theme:"accommodation"},
+
     // Thema: Activiteiten & Vrije tijd
     {en:"tour", nl:["rondleiding","reis","tocht","excursie"], sentence:"We booked a city tour for tomorrow.", theme:"activities"},
-    {en:"hiking", nl:["wandelen","fietsen","rennen","vliegen"], sentence:"Hiking in the mountains is exhilarating.", theme:"activities"},
-    {en:"camping", nl:["kamperen","wandelen","fietsen","rennen"], sentence:"Camping under the stars is magical.", theme:"activities"},
-    {en:"massage", nl:["massage","zwemmen","wandelen","eten"], sentence:"I booked a relaxing massage at the spa.", theme:"activities"},
+    {en:"hiking", nl:["wandelen","rennen","fietsen","klimmen"], sentence:"Hiking in the mountains is refreshing.", theme:"activities"},
+    {en:"camping", nl:["kamperen","wandelen","fietsen","varen"], sentence:"Camping under the stars is fun.", theme:"activities"},
+    {en:"massage", nl:["massage","zwemmen","wandelen","eten"], sentence:"I had a relaxing massage at the spa.", theme:"activities"},
     {en:"dancing", nl:["dansen","zingen","springen","rennen"], sentence:"We went dancing at the nightclub.", theme:"activities"},
-    {en:"fishing", nl:["vissen","zwemmen","wandelen","rennen"], sentence:"Fishing is popular at the lake.", theme:"activities"},
+    {en:"fishing", nl:["vissen","zwemmen","wandelen","rennen"], sentence:"Fishing is allowed at that lake.", theme:"activities"},
     {en:"skiing", nl:["skiën","springen","rennen","wandelen"], sentence:"Skiing is fun in winter resorts.", theme:"activities"},
-    {en:"snorkeling", nl:["snorkelen","duiken","zwemmen","varen"], sentence:"Snorkeling reveals underwater life.", theme:"activities"},
-    {en:"sunbathing", nl:["zonnen","zwemmen","wandelen","rennen"], sentence:"Sunbathing requires sunscreen.", theme:"activities"},
-    {en:"party", nl:["feest","bijeenkomst","vergadering","show"], sentence:"We're attending a beach party tonight.", theme:"activities"},
+    {en:"snorkeling", nl:["snorkelen","duiken","zwemmen","varen"], sentence:"Snorkeling reveals colorful fish.", theme:"activities"},
+    {en:"sunbathing", nl:["zonnen","zwemmen","wandelen","rennen"], sentence:"She is sunbathing on the beach.", theme:"activities"},
+    {en:"party", nl:["feest","bijeenkomst","vergadering","show"], sentence:"We're going to a big party tonight.", theme:"activities"},
   ];
 
-  // Globale variabelen
+  // Globals
   let gameMode = 'en-nl';
   let currentQuestions = [];
   let currentQuestionIndex = 0;
@@ -569,21 +556,16 @@
   const exampleSentenceElem = document.getElementById('example-sentence');
   const themeSelect = document.getElementById('theme-select');
 
-  // Eventlisteners init
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('total-words').textContent = vocabulary.length;
     setupModeButtons();
     document.getElementById('start-button').addEventListener('click', startQuiz);
     document.getElementById('restart-button').addEventListener('click', restartQuiz);
     themeSelect.addEventListener('change', () => {
       currentTheme = themeSelect.value;
-      showAvailableWordsCount();
     });
     document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
     speakIcon.addEventListener('click', () => {
-      if(gameMode === 'en-nl') {
-        speakWord(wordTextElem.textContent);
-      }
+      if(gameMode === 'en-nl') speakWord(wordTextElem.textContent);
     });
     sentenceToggle.addEventListener('click', () => {
       if(exampleSentenceElem.classList.contains('hidden')) {
@@ -594,16 +576,14 @@
         sentenceToggle.textContent = "💬";
       }
     });
-    showAvailableWordsCount();
   });
 
   function toggleTheme() {
     document.body.classList.toggle('night');
-    document.querySelectorAll('.container').forEach(c => c.classList.toggle('night'));
+    document.querySelectorAll('.container').forEach(c=>c.classList.toggle('night'));
     document.querySelector('footer').classList.toggle('night');
     document.querySelector('h1').classList.toggle('night');
     document.querySelector('.subtitle').classList.toggle('night');
-
     const btn = document.getElementById('toggle-theme');
     if(document.body.classList.contains('night')) {
       btn.textContent = '☀️';
@@ -646,13 +626,10 @@
 
   function startQuiz() {
     let input = document.getElementById('words-input').value;
-    totalQuestions = input === '' || input === '0' ? vocabulary.length : parseInt(input);
-    // Filter op thema
-    const filteredVocab = currentTheme === 'all' ? vocabulary : vocabulary.filter(w => w.theme === currentTheme);
-    totalQuestions = Math.min(Math.max(1, totalQuestions), filteredVocab.length);
-
-    const shuffled = [...filteredVocab].sort(() => Math.random() - 0.5);
-    currentQuestions = shuffled.slice(0, totalQuestions);
+    let filtered = currentTheme === 'all' ? vocabulary : vocabulary.filter(w => w.theme === currentTheme);
+    totalQuestions = input === '' || input==='0' ? filtered.length : parseInt(input);
+    totalQuestions = Math.min(Math.max(1, totalQuestions), filtered.length);
+    currentQuestions = shuffleArray(filtered).slice(0, totalQuestions);
     currentQuestionIndex = 0;
     score = 0;
     document.getElementById('setup-screen').classList.add('hidden');
@@ -670,7 +647,6 @@
     const currentWord = currentQuestions[currentQuestionIndex];
     const questionText = gameMode === 'en-nl' ? currentWord.en : currentWord.nl[0];
     const correctAnswer = gameMode === 'en-nl' ? currentWord.nl[0] : currentWord.en;
-
     wordTextElem.textContent = questionText;
     exampleSentenceElem.classList.add('hidden');
     sentenceToggle.textContent = "💬";
@@ -695,10 +671,10 @@
 
   function generateAnswers(correctAnswer) {
     const answers = new Set([correctAnswer]);
-    // Filter op thema
     let pool = currentTheme === 'all' ? vocabulary : vocabulary.filter(w => w.theme === currentTheme);
     pool = pool.filter(w => gameMode === 'en-nl' ? w.nl[0] !== correctAnswer : w.en !== correctAnswer);
-    const shuffledPool = pool.sort(() => Math.random() - 0.5);
+    // Shuffle and pick 3 distinct wrong answers
+    const shuffledPool = shuffleArray(pool);
     let added = 0;
     for(let i=0; i < shuffledPool.length && added < 3; i++) {
       const wrongAnswer = gameMode === 'en-nl' ? shuffledPool[i].nl[0] : shuffledPool[i].en;
@@ -707,7 +683,7 @@
         added++;
       }
     }
-    return Array.from(answers).sort(() => Math.random() - 0.5);
+    return shuffleArray(Array.from(answers));
   }
 
   function displayChoices(answers, correctAnswer) {
@@ -813,12 +789,13 @@
     window.speechSynthesis.speak(utterance);
   }
 
-  function showAvailableWordsCount() {
-    const filteredVocab = currentTheme === 'all' ? vocabulary : vocabulary.filter(w => w.theme === currentTheme);
-    document.getElementById('total-words').textContent = filteredVocab.length;
-    if(document.getElementById('words-input').value > filteredVocab.length) {
-      document.getElementById('words-input').value = filteredVocab.length;
+  // Utility voor shufflen
+  function shuffleArray(array) {
+    for(let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
   }
 </script>
 </body>
