@@ -3,800 +3,156 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pake Jan & Oma Inge op vakantie - Verbeterde Quiz</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<title>Engels Leren Quiz voor Pake Jan & Oma Inge</title>
 <style>
-    :root {
-        --sun: #FFD700;
-        --sand: #F4E4C1;
-        --ocean: #4A90E2;
-        --coral: #FF6B6B;
-        --palm: #2ECC71;
-        --sunset: #FF8C42;
-        --sky: #87CEEB;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #87CEEB 0%, #FFEFBA 100%);
-        min-height: 100vh;
-        padding: 20px 10px 80px 10px;
-        position: relative;
-        overflow-x: hidden;
-        transition: background 1s ease;
-    }
-    body.night {
-        background: linear-gradient(135deg, #001848 0%, #004f91 100%);
-    }
-    .header-photo {
-        width: 100%;
-        max-width: 420px;
-        border-radius: 25px;
-        margin: 0 auto 20px;
-        display: block;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-        border: 8px solid white;
-        transform: rotate(-3deg);
-        animation: float 6s ease-in-out infinite;
-    }
-    .cloud, .parasol, .cocktail, .beachball {
-        position: absolute;
-        font-size: 4rem;
-        opacity: 0.18;
-        pointer-events: none;
-        animation: drift 30s linear infinite;
-        z-index: 0;
-    }
-    .cloud { top: 11%; left: -10%; animation-duration: 35s; }
-    .parasol { top: 22%; right: -9%; animation-duration: 40s; font-size: 4.6rem;}
-    .cocktail { top: 34%; left: 2%; animation-duration: 42s; font-size: 4.8rem;}
-    .beachball { top: 7%; right: 4%; animation-duration: 38s; font-size: 5.2rem;}
-    .container {
-        background: rgba(255, 255, 255, 0.98);
-        padding: 40px 30px;
-        border-radius: 30px;
-        box-shadow: 
-            0 25px 70px rgba(0,0,0,0.25),
-            0 0 0 6px rgba(255, 215, 0, 0.4);
-        max-width: 720px;
-        width: 100%;
-        margin: 20px auto;
-        text-align: center;
-        position: relative;
-        backdrop-filter: blur(10px);
-        border: 4px solid #FFF;
-        z-index: 1;
-        transition: background 1s ease;
-    }
-    .container.night {
-        background: rgba(10, 10, 50, 0.9);
-        border-color: #5882FA;
-        color: #CDD9FF;
-    }
-    .container::before, .container::after {
-        content: '🌴';
-        position: absolute;
-        font-size: 3.5em;
-        top: -20px;
-        opacity: 0.7;
-    }
-    .container::before { left: 20px; transform: rotate(-20deg);}
-    .container::after { right: 20px; transform: rotate(20deg); }
-    h1 {
-        font-family: 'Fredoka One', cursive;
-        font-size: 2.8em;
-        background: linear-gradient(135deg, #FF8C42, #FF6B6B, #FFD700);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 15px 0 10px;
-    }
-    h1.night {
-        background: linear-gradient(135deg, #5882FA, #30B5D5, #FFD700);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .subtitle {
-        font-size: 1.4em;
-        color: var(--ocean);
-        font-weight: 600;
-        margin: 10px 0 25px;
-        transition: color 1s ease;
-    }
-    .subtitle.night {
-        color: #ADD8E6;
-    }
-    .emoji-big {
-        font-size: 4.5em;
-        margin: 20px 0;
-        animation: float 4s ease-in-out infinite;
-    }
-    .big-button {
-        background: linear-gradient(135deg, var(--coral), var(--sunset));
-        color: white;
-        border: none;
-        padding: 18px 36px;
-        margin: 12px 10px;
-        border-radius: 50px;
-        font-size: 1.35em;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-        transition: all 0.3s;
-        min-width: 220px;
-    }
-    .big-button:hover {
-        transform: translateY(-5px) scale(1.07);
-        box-shadow: 0 15px 35px rgba(255, 107, 107, 0.5);
-    }
-    .big-button:active {
-        transform: translateY(-2px) scale(1.03);
-    }
-    .mode-button {
-        background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-        color: #1976D2;
-        border: 4px solid #4A90E2;
-        padding: 18px 36px;
-        margin: 12px 10px;
-        border-radius: 50px;
-        font-size: 1.35em;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s;
-        min-width: 220px;
-    }
-    .mode-button.selected {
-        background: linear-gradient(135deg, #4A90E2, #357ABD);
-        color: white;
-        border-color: #2196F3;
-        transform: scale(1.08);
-        box-shadow: 0 8px 25px rgba(74, 144, 226, 0.5);
-    }
-    .mode-button:hover {
-        transform: translateY(-3px);
-    }
-    #words-input {
-        padding: 15px 20px;
-        font-size: 1.3em;
-        border-radius: 15px;
-        border: 3px solid #4A90E2;
-        width: 100%;
-        max-width: 200px;
-        text-align: center;
-        font-weight: bold;
-        margin: 15px auto;
-        display: block;
-    }
-    #word-display {
-        font-family: 'Fredoka One', cursive;
-        font-size: 3.4em;
-        background: linear-gradient(135deg, #FF8C42, #FF6B6B);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 30px 0;
-        min-height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1.2;
-        gap: 15px;
-    }
-    #speak-icon {
-        cursor: pointer;
-        font-size: 0.6em;
-        color: #FF6B6B;
-        user-select: none;
-        transition: color 0.3s;
-    }
-    #speak-icon:hover {
-        color: #FF3B3B;
-    }
-    #sentence-toggle {
-        cursor: pointer;
-        font-size: 1em;
-        margin-left: 6px;
-        color: var(--palm);
-        font-weight: 600;
-        user-select: none;
-        border-bottom: 2px dotted var(--palm);
-    }
-    #sentence-toggle:hover {
-        color: #27AE60;
-        border-bottom-color: #27AE60;
-    }
-    #example-sentence {
-        font-family: 'Poppins', sans-serif;
-        font-style: italic;
-        color: #555;
-        max-width: 500px;
-        margin: 0 auto 20px;
-        min-height: 38px;
-        transition: opacity 0.3s ease;
-    }
-    #example-sentence.hidden {
-        opacity: 0; 
-        height: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-    }
-    .choices {
-        margin: 20px 0;
-        display: grid;
-        gap: 15px;
-    }
-    .choice-btn {
-        width: 100%;
-        padding: 22px;
-        font-size: 1.3em;
-        border-radius: 20px;
-        border: 4px solid #4A90E2;
-        background: white;
-        color: #2c3e50;
-        font-weight: 600;
-        transition: all 0.3s;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        cursor: pointer;
-    }
-    .choice-btn:hover:not(:disabled) {
-        background: #E3F2FD;
-        transform: translateY(-4px);
-        border-color: var(--sunset);
-        box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-    }
-    .choice-btn:active:not(:disabled) {
-        transform: translateY(-2px);
-    }
-    .choice-btn.correct {
-        background: linear-gradient(135deg, #2ECC71, #27AE60) !important;
-        color: white !important;
-        border-color: #27AE60 !important;
-        transform: scale(1.05) !important;
-        animation: pulse 0.5s ease;
-    }
-    .choice-btn.incorrect {
-        background: linear-gradient(135deg, #f44336, #d32f2f) !important;
-        color: white !important;
-        border-color: #d32f2f !important;
-        transform: scale(0.95) !important;
-        animation: shake 0.5s ease;
-    }
-    .choice-btn:disabled {
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-    #progress-bar {
-        height: 28px;
-        background: rgba(255,255,255,0.9);
-        border-radius: 20px;
-        overflow: hidden;
-        margin: 25px 0;
-        border: 3px solid #FFD700;
-    }
-    #progress-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #2ECC71, #FFD700, #FF8C42);
-        transition: width 0.7s ease;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
-    }
-    .word-count-badge {
-        display: none;
-    }
-    .hidden { display: none !important;}
-    .score-display {
-        font-size: 3em;
-        font-family: 'Fredoka One', cursive;
-        background: linear-gradient(135deg, #FFD700, #FF8C42);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 20px 0;
-    }
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 15px;
-        margin: 25px 0;
-    }
-    .stat-box {
-        background: linear-gradient(135deg, #E3F2FD, #fff);
-        padding: 20px;
-        border-radius: 20px;
-        border: 3px solid #4A90E2;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
-    .stat-value {
-        font-size: 2.2em;
-        font-weight: bold;
-        color: #FF6B6B;
-        font-family: 'Fredoka One', cursive;
-    }
-    .stat-label {
-        color: #555;
-        font-weight: 600;
-        margin-top: 5px;
-    }
-    .question-indicator {
-        font-size: 1.2em;
-        color: #555;
-        margin: 10px 0;
-        font-weight: 600;
-    }
-    footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        padding: 16px 0;
-        background: linear-gradient(90deg,#FFD700 27%, #FF8C42 80%);
-        text-align: center;
-        font-size: 1.35em;
-        color: #037;
-        font-weight: 600;
-        letter-spacing: 1px;
-        box-shadow: 0px -8px 28px rgba(255, 140, 66, 0.13);
-        transition: background 1s ease;
-    }
-    footer.night {
-        background: linear-gradient(90deg,#00478c 20%, #001a37 80%);
-        color: #A2BEFF;
-    }
-    .footer-emoji { font-size: 2em; margin: 0 6px;}
-    #toggle-theme {
-        position: fixed;
-        top: 15px;
-        right: 15px;
-        background: var(--sunset);
-        border: none;
-        border-radius: 40px;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        font-size: 1.5em;
-        box-shadow: 0 5px 12px rgba(255, 140, 66, 0.6);
-        color: white;
-        transition: background 0.3s ease;
-        z-index: 9999;
-    }
-    #toggle-theme:hover {
-        background: #FF3B3B;
-    }
-    @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(-3deg);}
-        50% { transform: translateY(-15px) rotate(3deg);}
-    }
-    @keyframes drift {
-        0% { transform: translateX(-100px);}
-        100% { transform: translateX(calc(100vw + 100px));}
-    }
-    @keyframes pulse {
-        0%, 100% { transform: scale(1.05);}
-        50% { transform: scale(1.1);}
-    }
-    @keyframes shake {
-        0%, 100% { transform: translateX(0);}
-        25% { transform: translateX(-10px);}
-        75% { transform: translateX(10px);}
-    }
-    @media (max-width: 768px) {
-        .header-photo{max-width:300px; border-width:6px;}
-        h1{font-size:2.2em;}
-        .subtitle{font-size:1.2em;}
-        .emoji-big{font-size:3.5em;}
-        .big-button,.mode-button{padding:16px 28px; font-size:1.2em; min-width:auto; width:calc(50% - 20px); margin:8px 10px;}
-        #word-display{font-size:2.5em;min-height:80px;}
-        .choice-btn{padding:18px;font-size:1.15em;}
-        .container::before,.container::after{font-size:2.5em;}
-        footer{font-size:1em;}
-    }
-    @media (max-width:480px) {
-        body{padding:15px 5px;}
-        .container{padding:30px 20px; border-radius:25px;}
-        .big-button,.mode-button{width:100%; margin:10px 0; font-size:1.1em; padding:14px 24px;}
-        .header-photo{max-width:260px;}
-        h1{font-size:1.8em;}
-        #word-display{font-size:2em;min-height:70px;}
-        .choice-btn{font-size:1.05em;padding:16px;}
-        .score-display{font-size:2.5em;}
-        .stat-value{font-size:1.8em;}
-        footer {font-size:0.95em;}
-    }
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f7f9fc; color:#333;}
+  h1 { text-align: center; color: #114b8a; }
+  #quiz-container { max-width: 480px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px #ccc;}
+  #question { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px;}
+  .option { background: #e0e7f9; border-radius: 6px; margin: 6px 0; padding: 10px; cursor: pointer; user-select: none;}
+  .option:hover { background: #c7d1f9; }
+  #score { margin-top: 15px; font-size: 1rem; }
+  #progress-bar { background: #ddd; border-radius: 12px; overflow: hidden; height: 15px; margin-top: 20px;}
+  #progress { background: #4572e8; width: 0%; height: 100%; transition: width 0.3s;}
+  #modeToggle { margin-bottom: 20px; cursor: pointer; color:#114b8a; text-decoration: underline; }
+  #playSoundBtn { margin-left: 10px; cursor: pointer; }
 </style>
 </head>
 <body>
-<button id="toggle-theme" aria-label="Thema wisselen">🌙</button>
+<h1>Engels Leren Quiz voor Pake Jan & Oma Inge</h1>
 
-<div class="cloud">☁️</div>
-<div class="parasol">⛱️</div>
-<div class="cocktail">🍹</div>
-<div class="beachball">🏖️</div>
-
-<img src="https://raw.githubusercontent.com/marceleenenaam-hue/Pake-en-oma-leren-Engels/main/images/pake-inge-vakantie.jpg" alt="Pake Jan & Oma Inge op vakantie" class="header-photo" onerror="this.style.display='none'" />
-
-<div id="setup-screen" class="container">
-    <h1>Pake Jan & Oma Inge<br>op vakantie!</h1>
-    <div class="emoji-big">✈️🌴☀️🏖️</div>
-    <p class="subtitle">Leren Engels was nog nooit zo leuk!</p>
-
-    <p style="font-size:1.3em;margin:20px 0 10px;font-weight:600;">Kies je thema</p>
-    <select id="theme-select" style="font-size:1.2em; padding:12px; border-radius: 15px; border: 3px solid var(--ocean); max-width:250px; margin:0 auto 25px; display:block;">
-      <option value="all">Alles</option>
-      <option value="beach">Strand & Zee</option>
-      <option value="travel">Reizen & Vervoer</option>
-      <option value="food">Eten & Drinken</option>
-      <option value="accommodation">Accommodatie & Service</option>
-      <option value="activities">Activiteiten & Vrije tijd</option>
-    </select>
-
-    <p style="font-size:1.3em;margin:20px 0 10px;font-weight:600;">Welke kant wil je oefenen?</p>
-    <div>
-        <button class="mode-button" id="mode-en-nl">🇬🇧 Engels → Nederlands</button>
-        <button class="mode-button" id="mode-nl-en">🇳🇱 Nederlands → Engels</button>
-    </div>
-    <p style="font-size:1.3em; margin:25px 0 10px; font-weight:600;">Hoeveel woorden wil je oefenen?</p>
-    <input type="number" id="words-input" min="0" max="100" placeholder="20" value="20" />
-    <p style="margin:15px 0;color:#555;">💡 Tip: Vul 0 in voor <strong>alle</strong> woorden!</p>
-    <button class="big-button" id="start-button" style="background:linear-gradient(135deg,#FFD700,#FF8C42);font-size:1.5em;padding:20px 40px;width:auto;margin-top:20px;">🚀 Start de vakantiequiz!</button>
+<div id="quiz-container">
+  <div id="modeToggle">Wissel van modus (Engels → Nederlands / Nederlands → Engels)</div>
+  <div id="question"></div>
+  <button id="playSoundBtn" title="Speel uitspraak af">🔈</button>
+  <div id="options"></div>
+  <div id="score"></div>
+  <div id="progress-bar"><div id="progress"></div></div>
 </div>
-
-<div id="quiz-screen" class="container hidden">
-    <div id="progress-bar"><div id="progress-fill"></div></div>
-    <p class="question-indicator">Vraag <span id="question-number">1</span> van <span id="total-questions">20</span></p>
-    <div id="word-display">
-        <span id="word-text">🌴 Laden...</span>
-        <span id="speak-icon" class="hidden" title="Luister uitspraak" role="button" aria-label="Uitspraak horen">🔊</span>
-        <span id="sentence-toggle" class="hidden" title="Voorbeeldzin tonen">💬</span>
-    </div>
-    <div id="example-sentence" class="hidden"></div>
-    <p style="font-size:1.1em; color:#666; margin:15px 0;">Wat betekent dit?</p>
-    <div class="choices" id="choices-container"></div>
-</div>
-
-<div id="end-screen" class="container hidden">
-    <h1>🎊 Gefeliciteerd! 🎊</h1>
-    <div class="emoji-big">🏆🌟✨</div>
-    <div class="score-display"><span id="final-score">0</span> / <span id="final-total">0</span></div>
-    <div class="stats">
-        <div class="stat-box">
-            <div class="stat-value" id="stat-correct">0</div>
-            <div class="stat-label">✅ Goed</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-value" id="stat-wrong">0</div>
-            <div class="stat-label">❌ Fout</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-value" id="stat-percentage">0%</div>
-            <div class="stat-label">📊 Score</div>
-        </div>
-    </div>
-    <p id="encouragement" style="font-size:1.4em; margin:25px 0; color:#FF6B6B; font-weight:600;"></p>
-    <button class="big-button" id="restart-button" style="background:linear-gradient(135deg,#2ECC71,#27AE60); font-size:1.4em;">🔄 Nog een keer spelen!</button>
-</div>
-
-<footer><span class="footer-emoji">🌅</span> Veel plezier met leren op vakantie! <span class="footer-emoji">⛱️🍦</span></footer>
 
 <script>
-  const vocabulary = [
-    // Thema: Strand & Zee
-    {en:"holiday", nl:["vakantie","feestdag","recreatie","zomer"], sentence:"We're planning a holiday to the beach next month.", theme:"beach"},
-    {en:"shore", nl:["kust","heuvel","rivier","bos"], sentence:"We walked along the rocky shore.", theme:"beach"},
-    {en:"sun", nl:["zon","maan","ster","wolk"], sentence:"The sun set late in the evening.", theme:"beach"},
-    {en:"ocean", nl:["oceaan","meer","rivier","zwembad"], sentence:"The ocean waves are very strong.", theme:"beach"},
-    {en:"palm tree", nl:["palmboom","dennenboom","eik","berk"], sentence:"The palm trees swayed in the wind.", theme:"beach"},
-    {en:"sunset", nl:["zonsondergang","zonsopkomst","avond","morgen"], sentence:"The sunset was breathtaking.", theme:"beach"},
-    {en:"island", nl:["eiland","berg","strand","rivier"], sentence:"They stayed on a small island.", theme:"beach"},
-    {en:"snorkeling", nl:["snorkelen","zwemmen","duiken","varen"], sentence:"Snorkeling allows you to see fish underwater.", theme:"beach"},
-    {en:"seashell", nl:["schelp","steen","hout","klei"], sentence:"She collected seashells along the shore.", theme:"beach"},
-    {en:"lifeguard", nl:["strandwacht","badmeester","barman","kok"], sentence:"The lifeguard watched the swimmers carefully.", theme:"beach"},
+// Woordenlijst: Engels -> Nederlands
+const woorden = [
+  { eng: "apple", nl: "appel" },
+  { eng: "house", nl: "huis" },
+  { eng: "car", nl: "auto" },
+  { eng: "book", nl: "boek" },
+  { eng: "water", nl: "water" },
+  { eng: "food", nl: "eten" },
+  { eng: "friend", nl: "vriend" },
+  { eng: "phone", nl: "telefoon" },
+  { eng: "family", nl: "familie" },
+  { eng: "city", nl: "stad" },
+  // Je kunt deze lijst uitbreiden tot 150+ woorden
+];
 
-    // Thema: Reizen & Vervoer
-    {en:"airport", nl:["vliegveld","station","haven","plein"], sentence:"They arrived at the airport two hours early.", theme:"travel"},
-    {en:"flight", nl:["vlucht","reis","trein","auto"], sentence:"The flight was smooth and quiet.", theme:"travel"},
-    {en:"passport", nl:["paspoort","kaart","bewijs","identiteitsbewijs"], sentence:"Always carry your passport when traveling abroad.", theme:"travel"},
-    {en:"ticket", nl:["ticket","bewijs","kaart","voucher"], sentence:"I bought a ticket to Paris.", theme:"travel"},
-    {en:"taxi", nl:["taxi","bus","auto","fiets"], sentence:"We took a taxi to the hotel.", theme:"travel"},
-    {en:"train", nl:["trein","bus","auto","vliegtuig"], sentence:"The train ride took three hours.", theme:"travel"},
-    {en:"luggage", nl:["bagage","tas","koffer","rugzak"], sentence:"He packed his luggage carefully.", theme:"travel"},
-    {en:"customs", nl:["douane","controle","politie","beveiliging"], sentence:"We went through customs without problems.", theme:"travel"},
-    {en:"boarding gate", nl:["instapgate","uitgang","deur","trap"], sentence:"Our flight leaves from boarding gate 5.", theme:"travel"},
-    {en:"itinerary", nl:["reisschema","tijdschema","lijst","map"], sentence:"The itinerary includes visits to several cities.", theme:"travel"},
+// Instellingen
+let mode = "Eng→Nl"; // Of "Nl→Eng"
+let currentQuestionIndex = 0;
+let score = 0;
 
-    // Thema: Eten & Drinken
-    {en:"restaurant", nl:["restaurant","café","winkel","studio"], sentence:"We had dinner at a cozy restaurant.", theme:"food"},
-    {en:"breakfast", nl:["ontbijt","lunch","diner","snack"], sentence:"Breakfast is the most important meal of the day.", theme:"food"},
-    {en:"juice", nl:["sap","melk","water","thee"], sentence:"I drank fresh apple juice.", theme:"food"},
-    {en:"coffee", nl:["koffie","thee","cola","sap"], sentence:"Coffee helps me wake up in the morning.", theme:"food"},
-    {en:"tea", nl:["thee","koffie","soda","water"], sentence:"Would you like some tea or coffee?", theme:"food"},
-    {en:"dessert", nl:["nagerecht","voorgerecht","hoofdgerecht","drank"], sentence:"The dessert was delicious and sweet.", theme:"food"},
-    {en:"barbecue", nl:["barbecue","picknick","feest","concert"], sentence:"We're having a barbecue this weekend.", theme:"food"},
-    {en:"fruit", nl:["fruit","groente","vlees","vis"], sentence:"Eating fruit is good for your health.", theme:"food"},
-    {en:"dinner", nl:["diner","lunch","ontbijt","snack"], sentence:"Dinner will be served at 7 PM.", theme:"food"},
-    {en:"waiter", nl:["ober","kok","gast","manager"], sentence:"The waiter brought our food quickly.", theme:"food"},
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const scoreEl = document.getElementById("score");
+const progressBarEl = document.getElementById("progress");
+const playSoundBtn = document.getElementById("playSoundBtn");
+const modeToggle = document.getElementById("modeToggle");
 
-    // Thema: Accommodatie & Service
-    {en:"hotel", nl:["hotel","resort","gebouw","plek"], sentence:"The hotel has a wonderful view.", theme:"accommodation"},
-    {en:"room", nl:["kamer","appartement","huis","hotel"], sentence:"Our room is on the third floor.", theme:"accommodation"},
-    {en:"reception", nl:["receptie","bureau","kast","tafel"], sentence:"We checked in at the reception desk.", theme:"accommodation"},
-    {en:"key", nl:["sleutel","kaart","laptop","boek"], sentence:"Don't lose your room key.", theme:"accommodation"},
-    {en:"pool", nl:["zwembad","meer","vijver","bad"], sentence:"We spent the afternoon by the pool.", theme:"accommodation"},
-    {en:"wifi", nl:["wifi","internet","kabel","usb"], sentence:"The wifi password is available at reception.", theme:"accommodation"},
-    {en:"bathroom", nl:["badkamer","keuken","woonkamer","slaapkamer"], sentence:"The bathroom has a shower and a tub.", theme:"accommodation"},
-    {en:"elevator", nl:["lift","trap","roltrap","deur"], sentence:"Take the elevator to the lobby.", theme:"accommodation"},
-    {en:"check-in", nl:["inchecken","uitchecken","vertrekken","aankomen"], sentence:"Check-in starts at 3 PM.", theme:"accommodation"},
-    {en:"check-out", nl:["uitchecken","inchecken","lontrekken","aankomen"], sentence:"Please check out before noon.", theme:"accommodation"},
+// Kies willekeurig vier opties (inclusief correcte)
+function getOptions(correctIndex) {
+  let options = [woorden[correctIndex]];
+  while (options.length < 4) {
+    const randIndex = Math.floor(Math.random() * woorden.length);
+    const candidate = woorden[randIndex];
+    // Vermijd duplicaten
+    if (!options.includes(candidate)) options.push(candidate);
+  }
+  // Schud opties
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+  return options;
+}
 
-    // Thema: Activiteiten & Vrije tijd
-    {en:"tour", nl:["rondleiding","reis","tocht","excursie"], sentence:"We booked a city tour for tomorrow.", theme:"activities"},
-    {en:"hiking", nl:["wandelen","rennen","fietsen","klimmen"], sentence:"Hiking in the mountains is refreshing.", theme:"activities"},
-    {en:"camping", nl:["kamperen","wandelen","fietsen","varen"], sentence:"Camping under the stars is fun.", theme:"activities"},
-    {en:"massage", nl:["massage","zwemmen","wandelen","eten"], sentence:"I had a relaxing massage at the spa.", theme:"activities"},
-    {en:"dancing", nl:["dansen","zingen","springen","rennen"], sentence:"We went dancing at the nightclub.", theme:"activities"},
-    {en:"fishing", nl:["vissen","zwemmen","wandelen","rennen"], sentence:"Fishing is allowed at that lake.", theme:"activities"},
-    {en:"skiing", nl:["skiën","springen","rennen","wandelen"], sentence:"Skiing is fun in winter resorts.", theme:"activities"},
-    {en:"snorkeling", nl:["snorkelen","duiken","zwemmen","varen"], sentence:"Snorkeling reveals colorful fish.", theme:"activities"},
-    {en:"sunbathing", nl:["zonnen","zwemmen","wandelen","rennen"], sentence:"She is sunbathing on the beach.", theme:"activities"},
-    {en:"party", nl:["feest","bijeenkomst","vergadering","show"], sentence:"We're going to a big party tonight.", theme:"activities"},
-  ];
+// Toon een vraag en de opties
+function showQuestion() {
+  const word = woorden[currentQuestionIndex];
+  let vraagTekst;
+  if (mode === "Eng→Nl") {
+    vraagTekst = `Wat betekent het Engelse woord: [translate:${word.eng}]?`;
+  } else {
+    vraagTekst = `Wat is het Engelse woord voor: [translate:${word.nl}]?`;
+  }
+  questionEl.innerHTML = vraagTekst;
 
-  // Globals
-  let gameMode = 'en-nl';
-  let currentQuestions = [];
-  let currentQuestionIndex = 0;
-  let score = 0;
-  let totalQuestions = 20;
-  let currentTheme = 'all';
-
-  const wordTextElem = document.getElementById('word-text');
-  const speakIcon = document.getElementById('speak-icon');
-  const sentenceToggle = document.getElementById('sentence-toggle');
-  const exampleSentenceElem = document.getElementById('example-sentence');
-  const themeSelect = document.getElementById('theme-select');
-
-  document.addEventListener('DOMContentLoaded', () => {
-    setupModeButtons();
-    document.getElementById('start-button').addEventListener('click', startQuiz);
-    document.getElementById('restart-button').addEventListener('click', restartQuiz);
-    themeSelect.addEventListener('change', () => {
-      currentTheme = themeSelect.value;
-    });
-    document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
-    speakIcon.addEventListener('click', () => {
-      if(gameMode === 'en-nl') speakWord(wordTextElem.textContent);
-    });
-    sentenceToggle.addEventListener('click', () => {
-      if(exampleSentenceElem.classList.contains('hidden')) {
-        exampleSentenceElem.classList.remove('hidden');
-        sentenceToggle.textContent = "❌";
-      } else {
-        exampleSentenceElem.classList.add('hidden');
-        sentenceToggle.textContent = "💬";
-      }
-    });
+  const options = getOptions(currentQuestionIndex);
+  optionsEl.innerHTML = "";
+  options.forEach(opt => {
+    const btn = document.createElement("div");
+    btn.textContent = (mode === "Eng→Nl") ? opt.nl : opt.eng;
+    btn.className = "option";
+    btn.onclick = () => checkAnswer(opt);
+    optionsEl.appendChild(btn);
   });
 
-  function toggleTheme() {
-    document.body.classList.toggle('night');
-    document.querySelectorAll('.container').forEach(c=>c.classList.toggle('night'));
-    document.querySelector('footer').classList.toggle('night');
-    document.querySelector('h1').classList.toggle('night');
-    document.querySelector('.subtitle').classList.toggle('night');
-    const btn = document.getElementById('toggle-theme');
-    if(document.body.classList.contains('night')) {
-      btn.textContent = '☀️';
-      btn.setAttribute('aria-label','Thema licht wisselen');
-    } else {
-      btn.textContent = '🌙';
-      btn.setAttribute('aria-label','Thema donker wisselen');
-    }
-  }
+  updateProgress();
+  updateScore();
+}
 
-  function setupModeButtons() {
-    const enNlBtn = document.getElementById('mode-en-nl');
-    const nlEnBtn = document.getElementById('mode-nl-en');
-    enNlBtn.classList.add('selected');
-    enNlBtn.addEventListener('click', () => {
-      gameMode = 'en-nl';
-      enNlBtn.classList.add('selected');
-      nlEnBtn.classList.remove('selected');
-      updateSpeakIconVisibility();
-    });
-    nlEnBtn.addEventListener('click', () => {
-      gameMode = 'nl-en';
-      nlEnBtn.classList.add('selected');
-      enNlBtn.classList.remove('selected');
-      updateSpeakIconVisibility();
-    });
+// Controleer het antwoord
+function checkAnswer(selected) {
+  const correctWord = woorden[currentQuestionIndex];
+  let juist = false;
+  if ((mode === "Eng→Nl" && selected.nl === correctWord.nl) ||
+      (mode === "Nl→Eng" && selected.eng === correctWord.eng)) {
+    score++;
+    juist = true;
   }
+  alert(juist ? "Goed zo!" : `Fout, het juiste antwoord is: ${(mode === "Eng→Nl") ? correctWord.nl : correctWord.eng}`);
 
-  function updateSpeakIconVisibility() {
-    if(gameMode === 'en-nl') {
-      speakIcon.classList.remove('hidden');
-      sentenceToggle.classList.remove('hidden');
-    } else {
-      speakIcon.classList.add('hidden');
-      sentenceToggle.classList.add('hidden');
-      exampleSentenceElem.classList.add('hidden');
-      sentenceToggle.textContent = "💬";
-    }
-  }
-
-  function startQuiz() {
-    let input = document.getElementById('words-input').value;
-    let filtered = currentTheme === 'all' ? vocabulary : vocabulary.filter(w => w.theme === currentTheme);
-    totalQuestions = input === '' || input==='0' ? filtered.length : parseInt(input);
-    totalQuestions = Math.min(Math.max(1, totalQuestions), filtered.length);
-    currentQuestions = shuffleArray(filtered).slice(0, totalQuestions);
+  currentQuestionIndex++;
+  if (currentQuestionIndex >= woorden.length) {
+    alert(`Einde quiz! Je score is ${score} van ${woorden.length}.`);
     currentQuestionIndex = 0;
     score = 0;
-    document.getElementById('setup-screen').classList.add('hidden');
-    document.getElementById('quiz-screen').classList.remove('hidden');
-    document.getElementById('end-screen').classList.add('hidden');
-    document.getElementById('total-questions').textContent = totalQuestions;
-    showQuestion();
   }
+  showQuestion();
+}
 
-  function showQuestion() {
-    if(currentQuestionIndex >= currentQuestions.length) {
-      endQuiz();
-      return;
-    }
-    const currentWord = currentQuestions[currentQuestionIndex];
-    const questionText = gameMode === 'en-nl' ? currentWord.en : currentWord.nl[0];
-    const correctAnswer = gameMode === 'en-nl' ? currentWord.nl[0] : currentWord.en;
-    wordTextElem.textContent = questionText;
-    exampleSentenceElem.classList.add('hidden');
-    sentenceToggle.textContent = "💬";
-    exampleSentenceElem.textContent = "";
+// Score en voortgang bijwerken
+function updateScore() {
+  scoreEl.textContent = `Score: ${score} / ${woorden.length}`;
+}
 
-    updateSpeakIconVisibility();
+function updateProgress() {
+  const progressPercent = ((currentQuestionIndex) / woorden.length) * 100;
+  progressBarEl.style.width = progressPercent + "%";
+}
 
-    if(gameMode === 'en-nl') {
-      speakWord(questionText);
-      sentenceToggle.classList.remove('hidden');
-      exampleSentenceElem.textContent = currentWord.sentence;
-    }
+// Wissel tussen quizmodi
+modeToggle.onclick = () => {
+  mode = (mode === "Eng→Nl") ? "Nl→Eng" : "Eng→Nl";
+  currentQuestionIndex = 0;
+  score = 0;
+  showQuestion();
+}
 
-    document.getElementById('question-number').textContent = currentQuestionIndex + 1;
-
-    const progress = (currentQuestionIndex / totalQuestions) * 100;
-    document.getElementById('progress-fill').style.width = progress + '%';
-
-    const answers = generateAnswers(correctAnswer);
-    displayChoices(answers, correctAnswer);
+// Speel Engelse uitspraak af met Web Speech API
+playSoundBtn.onclick = () => {
+  const synth = window.speechSynthesis;
+  let textToSpeak = (mode === "Eng→Nl") ? woorden[currentQuestionIndex].eng : woorden[currentQuestionIndex].eng;
+  if (!synth) {
+    alert("Spraaksynthetisatie wordt niet ondersteund door deze browser.");
+    return;
   }
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.lang = "en-US";
+  synth.speak(utterance);
+}
 
-  function generateAnswers(correctAnswer) {
-    const answers = new Set([correctAnswer]);
-    let pool = currentTheme === 'all' ? vocabulary : vocabulary.filter(w => w.theme === currentTheme);
-    pool = pool.filter(w => gameMode === 'en-nl' ? w.nl[0] !== correctAnswer : w.en !== correctAnswer);
-    // Shuffle and pick 3 distinct wrong answers
-    const shuffledPool = shuffleArray(pool);
-    let added = 0;
-    for(let i=0; i < shuffledPool.length && added < 3; i++) {
-      const wrongAnswer = gameMode === 'en-nl' ? shuffledPool[i].nl[0] : shuffledPool[i].en;
-      if(!answers.has(wrongAnswer)) {
-        answers.add(wrongAnswer);
-        added++;
-      }
-    }
-    return shuffleArray(Array.from(answers));
-  }
-
-  function displayChoices(answers, correctAnswer) {
-    const container = document.getElementById('choices-container');
-    container.innerHTML = '';
-    answers.forEach(ans => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.textContent = ans;
-      btn.setAttribute('data-answer', ans);
-      btn.onclick = () => checkAnswer(ans, correctAnswer);
-      container.appendChild(btn);
-    });
-  }
-
-  function checkAnswer(selectedAnswer, correctAnswer) {
-    const buttons = document.querySelectorAll('.choice-btn');
-    buttons.forEach(btn => btn.disabled = true);
-
-    buttons.forEach(btn => {
-      const btnAnswer = btn.getAttribute('data-answer');
-      if(btnAnswer === selectedAnswer) {
-        if(selectedAnswer === correctAnswer) {
-          btn.classList.add('correct');
-          score++;
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 }
-          });
-        } else {
-          btn.classList.add('incorrect');
-        }
-      }
-      if(btnAnswer === correctAnswer) {
-        btn.classList.add('correct');
-      }
-    });
-
-    setTimeout(() => {
-      currentQuestionIndex++;
-      showQuestion();
-    }, 2000);
-  }
-
-  function endQuiz() {
-    document.getElementById('quiz-screen').classList.add('hidden');
-    document.getElementById('end-screen').classList.remove('hidden');
-
-    document.getElementById('final-score').textContent = score;
-    document.getElementById('final-total').textContent = totalQuestions;
-    document.getElementById('stat-correct').textContent = score;
-    document.getElementById('stat-wrong').textContent = totalQuestions - score;
-    let percentage = Math.round((score / totalQuestions) * 100);
-    document.getElementById('stat-percentage').textContent = percentage + '%';
-
-    let message = '';
-    if(percentage === 100) {
-      message = '🌟 Perfect! Je bent een echte vakantie-taalmeester! 🏆';
-    } else if(percentage >= 90) {
-      message = '🎉 Geweldig! Bijna perfect! 🌟';
-    } else if(percentage >= 75) {
-      message = '👏 Super gedaan! Dat ging heel goed! 💪';
-    } else if(percentage >= 60) {
-      message = '😊 Goed bezig! Blijf oefenen! 📚';
-    } else if(percentage >= 40) {
-      message = '💪 Niet slecht! Met oefenen wordt het beter! 🌈';
-    } else {
-      message = '🌱 Goed geprobeerd! Blijf doorgaan, je leert elke keer! 🚀';
-    }
-    document.getElementById('encouragement').textContent = message;
-
-    setTimeout(() => {
-      confetti({
-        particleCount: 200,
-        spread: 100,
-        origin: { y: 0.5 }
-      });
-    }, 500);
-  }
-
-  function restartQuiz() {
-    document.getElementById('end-screen').classList.add('hidden');
-    document.getElementById('setup-screen').classList.remove('hidden');
-    document.getElementById('progress-fill').style.width = '0%';
-    const enNlBtn = document.getElementById('mode-en-nl');
-    const nlEnBtn = document.getElementById('mode-nl-en');
-    enNlBtn.classList.add('selected');
-    nlEnBtn.classList.remove('selected');
-    gameMode = 'en-nl';
-    updateSpeakIconVisibility();
-  }
-
-  function speakWord(text) {
-    if(!('speechSynthesis' in window)) {
-      console.warn('Speech synthesis niet ondersteund.');
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // Utility voor shufflen
-  function shuffleArray(array) {
-    for(let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+// Start quiz
+showQuestion();
 </script>
 </body>
 </html>
